@@ -2,6 +2,7 @@ package com.example.veicolo.ui;
 
 import com.example.aggiungiMarca.Marca;
 import com.example.aggiungiMarca.MarcaService;
+import com.example.base.ui.ViewTitle;
 import com.example.modelli.Modello;
 import com.example.modelli.ModelloService;
 import com.example.veicolo.Veicolo;
@@ -111,7 +112,7 @@ public class VeicoliListView extends VerticalLayout {
 
         // Form
         var toolbar = new HorizontalLayout();
-        toolbar.add(marcaSelect, modelliSelect, targa, dataUltimaPrenotazione, prenotataPerGiorni, dataScadenzaAssicurazione, createBtn);
+        toolbar.add(new ViewTitle("Lista veicoli"), marcaSelect, modelliSelect, targa, dataUltimaPrenotazione, prenotataPerGiorni, dataScadenzaAssicurazione, createBtn);
 
         toolbar.setFlexGrow(1);
         toolbar.setWrap(true);
