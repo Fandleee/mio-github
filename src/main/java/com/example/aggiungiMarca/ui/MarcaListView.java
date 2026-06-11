@@ -6,6 +6,7 @@ import com.example.base.ui.ViewTitle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -14,6 +15,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.hibernate.tool.schema.spi.SchemaCreator;
 
 import java.util.Optional;
 
@@ -36,23 +38,34 @@ class MarcaListView extends VerticalLayout {
         this.marcaService = marcaService;
 
         nomeMarca = new TextField();
-        createBtn = new Button("Aggiungi", event -> createMarca());
+        createBtn = new Button("+", event -> createMarca());
         marcaGrid = new Grid<>();
 
         nomeMarca.setPlaceholder("BMW");
         nomeMarca.setAriaLabel("Nome marca");
         nomeMarca.setMaxLength(Marca.NOME_MARCA_MAX_LENGTH);
         nomeMarca.setMinWidth("15em");
+        nomeMarca.setClassName("padding-left-form");
 
-        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
+        createBtn.setClassName("form-btn");
+        createBtn.setHeightFull();
 
         var toolbar = new HorizontalLayout();
 
-        toolbar.add(new ViewTitle("Lista marche"), nomeMarca, createBtn);
-
-        toolbar.setFlexGrow(1, nomeMarca);
         toolbar.setWrap(true);
-        toolbar.setWidthFull();
+        toolbar.setHeightFull();
+        toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        toolbar.setAlignItems(Alignment.CENTER);
+        toolbar.setClassName("form-standard-style");
+        toolbar.add(new ViewTitle("Lista marche"), nomeMarca);
+
+        var outerWrapper = new HorizontalLayout();
+
+        outerWrapper.setWidthFull();
+        outerWrapper.setSpacing(false);
+        outerWrapper.setAlignItems(Alignment.CENTER);
+        outerWrapper.setFlexGrow(1, toolbar);
+        outerWrapper.add(toolbar, createBtn);
 
         marcaGrid.setItems(query -> marcaService.list(toSpringPageRequest(query)).stream());
         marcaGrid.addColumn(Marca::getMarca).setHeader("Nome");
@@ -61,7 +74,7 @@ class MarcaListView extends VerticalLayout {
 
         setSizeFull();
 
-        add(toolbar, marcaGrid);
+        add(outerWrapper, marcaGrid);
     }
 
     private void createMarca() {

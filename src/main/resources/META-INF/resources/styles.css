@@ -1,4 +1,35 @@
 /* Add your styles here */
+:root {
+    /*--lumo-base-color: #f0f0f0;*/
+}
+
+.form-standard-style {
+    box-shadow: -3px 2px 5px rgb(0 0 0 / 0.17);
+    border-start-start-radius: 35px;
+    border-end-start-radius: 35px;
+    padding-left: 10px;
+}
+
+.padding-left-form {
+    padding-right: 20px;
+}
+
+.form-btn {
+    border-end-end-radius: 35px;
+    border-start-end-radius: 35px;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+
+    background-color: #5050ff;
+    color: white;
+
+    font-weight: bolder;
+    font-size: 2rem;
+
+    padding-left: 10px;
+    padding-bottom: 5px;
+}
+
 
 .app-logo {
     border-radius: min(40%, var(--vaadin-radius-m));
@@ -13,17 +44,4 @@
 .app-footer {
     color: var(--vaadin-text-color-secondary);
     font-size: var(--lumo-font-size-s);
-}
-
-/* TODO: This is only for demo purposes. You can delete it. */
-vaadin-side-nav:has(vaadin-side-nav-item:only-child)::after {
-    display: block;
-    content: "More menu items will appear here when you add more views.";
-    font-size: var(--lumo-font-size-s);
-    color: var(--vaadin-text-color-secondary);
-    box-sizing: border-box;
-    padding: 1em;
-    max-width: 14em;
-    min-width: 100%;
-    white-space: normal;
 }
