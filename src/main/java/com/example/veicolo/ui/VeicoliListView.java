@@ -1,0 +1,205 @@
+package com.example.veicolo.ui;
+
+import com.example.aggiungiMarca.Marca;
+import com.example.aggiungiMarca.MarcaService;
+import com.example.modelli.Modello;
+import com.example.modelli.ModelloService;
+import com.example.veicolo.Veicolo;
+import com.example.veicolo.VeicoloService;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Menu;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
+import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRequest;
+
+@Route(value = "")
+@PageTitle("Veicoli")
+@Menu(order = 0, icon = "", title = "Veicoli")
+
+public class VeicoliListView extends VerticalLayout {
+
+    private final VeicoloService veicoloService;
+
+    final Select<Marca> marcaSelect;
+    final Select<Modello> modelliSelect;
+    final TextField targa;
+    final DatePicker dataUltimaPrenotazione;
+    final IntegerField prenotataPerGiorni;
+    final DatePicker dataScadenzaAssicurazione;
+
+    final Button createBtn;
+    final Grid<Veicolo> veicoloGrid;
+
+    VeicoliListView(ModelloService modelloService, VeicoloService veicoloService, MarcaService marcaService){
+
+        this.veicoloService = veicoloService;
+
+        marcaSelect = new Select<>();
+        modelliSelect = new Select<>();
+        targa = new TextField();
+        dataUltimaPrenotazione = new DatePicker();
+        prenotataPerGiorni = new IntegerField();
+        dataScadenzaAssicurazione = new DatePicker();
+
+        createBtn = new Button("Aggiungi", event -> createVeicolo());
+        veicoloGrid = new Grid<>();
+
+
+        // Marca Select
+        marcaSelect.setLabel("Marca");
+        marcaSelect.setPlaceholder("Seleziona marca");
+        List<Marca> marche = marcaService.list(Pageable.unpaged());
+        if (marche.isEmpty()) {
+            marcaSelect.setEnabled(false);
+            marcaSelect.setPlaceholder("Nessuna marca disponibile");
+        } else {
+            marcaSelect.setItems(marche);
+            marcaSelect.setItemLabelGenerator(Marca::getMarca);
+        }
+
+        // Modello Select
+        modelliSelect.setLabel("Modelli");
+        modelliSelect.setPlaceholder("Seleziona marca");
+        List<Modello> modello = modelloService.list(Pageable.unpaged());
+        if (modello.isEmpty()) {
+            modelliSelect.setEnabled(false);
+            modelliSelect.setPlaceholder("Nessun modello disponibile");
+        } else {
+            modelliSelect.setItems(modello);
+            modelliSelect.setItemLabelGenerator(Modello::getNomeModello);
+        }
+
+        // Targa
+        targa.setPlaceholder("AA000AA");
+        targa.setLabel("Targa veicolo");
+        targa.setAriaLabel("Targa veicolo");
+        targa.setMaxLength(Veicolo.TARGA_VEICOLO_MAX_LENGTH);
+        targa.setMinWidth("15em");
+
+        // Data ultima prenotazione
+        dataUltimaPrenotazione.setLabel("Data inizio ultima prenotazione");
+        dataUltimaPrenotazione.setAriaLabel("Data inizio ultima prenotazione");
+        dataUltimaPrenotazione.setMinWidth("15em");
+
+        // Giorni di penotazione
+        prenotataPerGiorni.setLabel("Durata prenotazione");
+        prenotataPerGiorni.setAriaLabel("Durata prenotazione");
+        prenotataPerGiorni.setMinWidth("15em");
+
+        // Scadenza assicurazione
+        dataScadenzaAssicurazione.setLabel("Data scadenza assicurazione");
+        dataScadenzaAssicurazione.setAriaLabel("Data scadenza assicurazione");
+        dataScadenzaAssicurazione.setMinWidth("15em");
+
+        // Button
+        createBtn.setText("Aggiungi");
+        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
+
+        // Form
+        var toolbar = new HorizontalLayout();
+        toolbar.add(marcaSelect, modelliSelect, targa, dataUltimaPrenotazione, prenotataPerGiorni, dataScadenzaAssicurazione, createBtn);
+
+        toolbar.setFlexGrow(1);
+        toolbar.setWrap(true);
+        toolbar.setWidthFull();
+        toolbar.setAlignItems(Alignment.CENTER);
+
+        // Visualizzazione record
+        veicoloGrid.setItems(query -> veicoloService.list(toSpringPageRequest(query)).stream());
+        veicoloGrid.addColumn(veicolo -> veicolo.getMarca().getMarca()).setHeader("Marca");
+        veicoloGrid.addColumn(veicolo -> veicolo.getNomeModello().getNomeModello()).setHeader("Modello");
+        veicoloGrid.addColumn(Veicolo::getTarga).setHeader("Targa");
+        veicoloGrid.addColumn(Veicolo::getDataUltimaPrenotazione).setHeader("Data inizio ultima prenotazione");
+        veicoloGrid.addColumn(Veicolo::getPrenotataPerGiorni).setHeader("Durata prenotazione");
+        veicoloGrid.addColumn(Veicolo::getFatturatoDaPrenotazione).setHeader("Guadagno da prenotazione in euro");
+        veicoloGrid.addColumn(Veicolo::getDataPrimaDisponibilita).setHeader("Prima data di disponibilita");
+        veicoloGrid.addColumn(Veicolo::getDataScadenzaAssicurazione).setHeader("Data scadenza assicurazione");
+        veicoloGrid.addColumn(Veicolo::geteAssicurato).setHeader("Assicurazione valida?");
+        veicoloGrid.addComponentColumn(veicolo -> {
+            Button elimina = new Button("Elimina", click -> deleteVeicolo(veicolo.getId()));
+            elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            return elimina;
+        }).setHeader("Azioni");
+        veicoloGrid.setEmptyStateText("Non ci sono veicoli registrati");
+        veicoloGrid.setSizeFull();
+
+        setSizeFull();
+
+        add(toolbar, veicoloGrid);
+    }
+
+    private void createVeicolo() {
+
+        if (marcaSelect.getValue() == null) {
+            marcaSelect.setInvalid(true);
+            marcaSelect.setErrorMessage("Marca richiesta");
+            return;
+        }
+        if (modelliSelect.getValue() == null) {
+            modelliSelect.setInvalid(true);
+            modelliSelect.setErrorMessage("Modello richiesto");
+            return;
+        }
+        if (targa.getValue().isBlank()) {
+            targa.setInvalid(true);
+            targa.setErrorMessage("Targa richiesta");
+            return;
+        }
+        if (dataUltimaPrenotazione.getValue() == null) {
+            dataUltimaPrenotazione.setInvalid(true);
+            dataUltimaPrenotazione.setErrorMessage("Data richiesta");
+            return;
+        }
+        if (prenotataPerGiorni.getValue() == null) {
+            prenotataPerGiorni.setInvalid(true);
+            prenotataPerGiorni.setErrorMessage("Durata richiesta");
+            return;
+        }
+        if (dataScadenzaAssicurazione.getValue() == null) {
+            dataScadenzaAssicurazione.setInvalid(true);
+            dataScadenzaAssicurazione.setErrorMessage("Data scadenza richiesta");
+            return;
+        }
+
+        String targaValore = targa.getValue();
+        veicoloService.createVeicolo(
+                marcaSelect.getValue(),
+                modelliSelect.getValue(),
+                targaValore,
+                dataUltimaPrenotazione.getValue(),
+                prenotataPerGiorni.getValue(),
+                dataScadenzaAssicurazione.getValue()
+        );
+
+        veicoloGrid.getDataProvider().refreshAll();
+
+        marcaSelect.setValue(null);
+        modelliSelect.setValue(null);
+        targa.clear();
+        dataUltimaPrenotazione.setValue(null);
+        prenotataPerGiorni.setValue(null);
+        dataScadenzaAssicurazione.setValue(null);
+
+        Notification.show(targaValore + " aggiunto!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+    }
+
+    private void deleteVeicolo(Long id){
+        veicoloService.deleteVeicolo(id);
+        veicoloGrid.getDataProvider().refreshAll();
+        Notification.show("Veicolo eliminato!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
+    }
+}
