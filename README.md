@@ -1,85 +1,98 @@
-# My Application README
+# Gestione Noleggio Veicoli
 
-- [ ] TODO Replace or update this README with instructions relevant to your application
+Applicazione web per la gestione di un parco veicoli a noleggio. Permette di catalogare marche, alimentazioni, tipologie, modelli e singoli veicoli con le relative prenotazioni e stato assicurativo.
+ 
+---
 
-## Project Structure
+## Stack tecnologico
 
-This project has the following structure:
+| Layer | Tecnologia |
+|---|---|
+| UI | [Vaadin Flow 24](https://vaadin.com/docs/latest/flow) |
+| Backend | Spring Boot 3 |
+| Persistenza | Spring Data JPA / Hibernate |
+| Database | Configurabile (default: H2 embedded in dev) |
+| Test UI | Vaadin Browserless Test |
+ 
+---
+
+## Struttura del progetto
 
 ```
-src
-├── main/java
-│   └── [application package]
-│       ├── base
-│       │   └── ui
-│       │       ├── MainLayout.java
-│       │       └── ViewTitle.java
-│       ├── examplefeature
-│       │   ├── ui
-│       │   │   └── TaskListView.java
-│       │   ├── Task.java
-│       │   ├── TaskRepository.java
-│       │   └── TaskService.java                
-│       └── Application.java     
-├── main/resources
-│   ├── META-INF
-│   │   └── resources
-│   │       ├── icons
-│   │       │   └── clipboard-check.svg
-│   │       ├── styles.css
-│   │       └── view-title.css
-│   └── application.properties 
-└── test/java
-    └── [application package]
-        └── examplefeature
-            ├── ui
-            │   └── TaskListViewTest.java
-            └── TaskServiceTest.java                 
+src/main/java/com/example/
+├── Application.java              # Entry point Spring Boot
+├── base/ui/                      # Componenti condivisi (MainLayout, ViewTitle)
+├── aggiungiMarca/                # Entità Marca + Service + Repository + UI
+├── alimentazioni/                # Entità Alimentazione + Service + Repository + UI
+├── tipologieVeicolo/             # Entità TipologiaVeicolo + Service + Repository + UI
+├── modelli/                      # Entità Modello + Service + Repository + UI
+└── veicolo/                      # Entità Veicolo + Service + Repository + UI
 ```
 
-The main entry point into the application is `Application.java`. This class contains the `main()` method that starts up 
-the Spring Boot application.
+Ogni modulo segue lo stesso pattern a tre livelli: `Repository → Service → View`.
+ 
+---
 
-The project follows a *feature-based package structure*, organizing code by *functional units* rather than traditional 
-architectural layers. It includes two feature packages: `base` and `examplefeature`.
+## Modello dati
 
-* The `base` package contains classes meant for reuse across different features, either through composition or 
-  inheritance. You can use them as-is, tweak them to your needs, or remove them.
-* The `examplefeature` package is an example feature package that demonstrates the structure. It represents a 
-  *self-contained unit of functionality*, including UI components, business logic, data access, and an integration test.
-  Once you create your own features, *you'll remove this package*.
+```
+Marca ──────────────────────────────────────┐
+                                            ▼
+Alimentazione ──── Modello ──── (1:N) ──── Veicolo
+                     ▲
+TipologiaVeicolo ───┘
+```
 
+Il costruttore di `Veicolo` calcola automaticamente:
+- `fatturatoDaPrenotazione` = `costoNoleggioGiornaliero × prenotataPerGiorni`
+- `dataPrimaDisponibilita` = `dataUltimaPrenotazione + prenotataPerGiorni` (giorni)
+- `eAssicurato` = `true` se `dataScadenzaAssicurazione >= oggi`
+---
 
-## Starting in Development Mode
+## Viste disponibili
 
-To start the application in development mode, import it into your IDE and run the `Application` class. 
-You can also start the application from the command line by running: 
+| Route | Vista | Ordine menu |
+|---|---|---|
+| `/` | Veicoli | 0 |
+| `/modelli` | Modelli | 1 |
+| `/alimentazioni` | Alimentazioni | 2 |
+| `/tipologie-veicolo` | Tipologie Veicolo | 3 |
+| `/marche` | Marche | 4 |
+ 
+---
+
+## Avvio in sviluppo
+
+**Prerequisiti:** Java 17+, Maven 3.8+
 
 ```bash
-./mvnw
+./mvnw spring-boot:run
 ```
 
-## Building for Production
+L'applicazione parte su `http://localhost:8080`. Il browser viene aperto automaticamente (configurato in `application.properties`).
 
-To build the application in production mode, run:
+> **Nota:** `spring.jpa.hibernate.ddl-auto=update` crea/aggiorna lo schema automaticamente. **Non usare in produzione.** Per ambienti stabili, integrare [Flyway](https://vaadin.com/docs/latest/building-apps/forms-data/add-flyway).
+ 
+---
+
+## Eseguire i test
 
 ```bash
-./mvnw package
+./mvnw test
 ```
 
-To build a Docker image, run:
+I test UI usano `SpringBrowserlessTest` di Vaadin, che esegue i componenti server-side senza un browser reale. Documentazione: [Vaadin Browserless Testing](https://vaadin.com/docs/latest/flow/testing/browserless).
+ 
+---
 
-```bash
-docker build -t my-application:latest .
-```
+## Configurazione
 
-If you use commercial components, pass the license key as a build secret:
+Tutte le proprietà si trovano in `src/main/resources/application.properties`.
 
-```bash
-docker build --secret id=proKey,src=$HOME/.vaadin/proKey .
-```
-
-## Next Steps
-
-The [Building Apps](https://vaadin.com/docs/v25/building-apps) guides contain hands-on advice for adding features to 
-your application.
+| Proprietà | Default | Descrizione |
+|---|---|---|
+| `server.port` | `8080` | Porta HTTP (sovrascrivibile con env `PORT`) |
+| `vaadin.launch-browser` | `true` | Apre il browser all'avvio in dev |
+| `spring.jpa.hibernate.ddl-auto` | `update` | Strategia DDL Hibernate |
+ 
+---
