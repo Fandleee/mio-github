@@ -50,8 +50,10 @@ class MarcaListView extends VerticalLayout {
         createBtn.setClassName("form-btn");
         createBtn.setHeightFull();
 
+        // Contiene titolo e campo form
         var toolbar = new HorizontalLayout();
 
+        toolbar.setFlexGrow(1, nomeMarca);
         toolbar.setWrap(true);
         toolbar.setHeightFull();
         toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
@@ -59,12 +61,14 @@ class MarcaListView extends VerticalLayout {
         toolbar.setClassName("form-standard-style");
         toolbar.add(new ViewTitle("Lista marche"), nomeMarca);
 
+        // Contiene la toolbar ed il bottone
         var outerWrapper = new HorizontalLayout();
 
         outerWrapper.setWidthFull();
         outerWrapper.setSpacing(false);
         outerWrapper.setAlignItems(Alignment.CENTER);
         outerWrapper.setFlexGrow(1, toolbar);
+        outerWrapper.setClassName("outer-wrapper-shadow");
         outerWrapper.add(toolbar, createBtn);
 
         marcaGrid.setItems(query -> marcaService.list(toSpringPageRequest(query)).stream());

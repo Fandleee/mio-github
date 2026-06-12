@@ -3,10 +3,12 @@
     /*--lumo-base-color: #f0f0f0;*/
 }
 
+.outer-wrapper-shadow {
+    box-shadow: 0 0 5px rgb(0 0 0 / 0.17);
+    border-radius: 35px;
+}
+
 .form-standard-style {
-    box-shadow: -3px 2px 5px rgb(0 0 0 / 0.17);
-    border-start-start-radius: 35px;
-    border-end-start-radius: 35px;
     padding-left: 10px;
 }
 
@@ -15,6 +17,8 @@
 }
 
 .form-btn {
+    box-shadow: 0 0 5px rgb(0 0 0 / 0.17);
+
     border-end-end-radius: 35px;
     border-start-end-radius: 35px;
     border-start-start-radius: 0;

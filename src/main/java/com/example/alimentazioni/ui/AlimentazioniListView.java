@@ -36,23 +36,36 @@ class AlimentazioniListView extends VerticalLayout {
         this.alimentazioneService = alimentazioneService;
 
         nomeAlimentazione = new TextField();
-        createBtn = new Button("Aggiungi", event -> createAlimentazione());
+        createBtn = new Button("+", event -> createAlimentazione());
         alimentazioneGrid = new Grid<>();
 
         nomeAlimentazione.setPlaceholder("Benzina");
         nomeAlimentazione.setAriaLabel("Nome alimentazione");
         nomeAlimentazione.setMaxLength(Alimentazione.NOME_MAX_LENGTH);
         nomeAlimentazione.setMinWidth("15em");
+        nomeAlimentazione.setClassName("padding-left-form");
 
-        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
+        createBtn.setClassName("form-btn");
+        createBtn.setHeightFull();
 
         var toolbar = new HorizontalLayout();
 
-        toolbar.add(new ViewTitle("Lista alimentazioni"), nomeAlimentazione, createBtn);
-
         toolbar.setFlexGrow(1, nomeAlimentazione);
         toolbar.setWrap(true);
-        toolbar.setWidthFull();
+        toolbar.setHeightFull();
+        toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        toolbar.setAlignItems(Alignment.CENTER);
+        toolbar.setClassName("form-standard-style");
+        toolbar.add(new ViewTitle("Lista alimentazioni"), nomeAlimentazione);
+
+        var outerWrapper = new HorizontalLayout();
+
+        outerWrapper.setWidthFull();
+        outerWrapper.setSpacing(false);
+        outerWrapper.setAlignItems(Alignment.CENTER);
+        outerWrapper.setFlexGrow(1, toolbar);
+        outerWrapper.setClassName("outer-wrapper-shadow");
+        outerWrapper.add(toolbar, createBtn);
 
         alimentazioneGrid.setItems(query -> alimentazioneService.list(toSpringPageRequest(query)).stream());
         alimentazioneGrid.addColumn(Alimentazione::getAlimentazione).setHeader("Nome");
@@ -61,7 +74,7 @@ class AlimentazioniListView extends VerticalLayout {
 
         setSizeFull();
 
-        add(toolbar, alimentazioneGrid);
+        add(outerWrapper, alimentazioneGrid);
     }
 
     private void createAlimentazione() {

@@ -33,23 +33,36 @@ class TipologieVeicoloListView extends VerticalLayout {
         this.tipologiaVeicoloService = tipologiaVeicoloService;
 
         nomeTipologia = new TextField();
-        createBtn = new Button("Aggiungi", event -> createTipologia());
+        createBtn = new Button("+", event -> createTipologia());
         tipologiaGrid = new Grid<>();
 
         nomeTipologia.setPlaceholder("SUV");
         nomeTipologia.setAriaLabel("Tipologia veicolo");
         nomeTipologia.setMaxLength(TipologiaVeicolo.NOME_MAX_LENGTH);
         nomeTipologia.setMinWidth("15em");
+        nomeTipologia.setClassName("padding-left-form");
 
-        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
+        createBtn.setClassName("form-btn");
+        createBtn.setHeightFull();
 
         var toolbar = new HorizontalLayout();
 
-        toolbar.add(new ViewTitle("Lista tipologie veicolo"), nomeTipologia, createBtn);
-
         toolbar.setFlexGrow(1, nomeTipologia);
         toolbar.setWrap(true);
-        toolbar.setWidthFull();
+        toolbar.setHeightFull();
+        toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        toolbar.setAlignItems(Alignment.CENTER);
+        toolbar.setClassName("form-standard-style");
+        toolbar.add(new ViewTitle("Lista tipologie veicolo"), nomeTipologia);
+
+        var outerWrapper = new HorizontalLayout();
+
+        outerWrapper.setWidthFull();
+        outerWrapper.setSpacing(false);
+        outerWrapper.setAlignItems(Alignment.CENTER);
+        outerWrapper.setFlexGrow(1, toolbar);
+        outerWrapper.setClassName("outer-wrapper-shadow");
+        outerWrapper.add(toolbar, createBtn);
 
         tipologiaGrid.setItems(query -> tipologiaVeicoloService.list(toSpringPageRequest(query)).stream());
         tipologiaGrid.addColumn(TipologiaVeicolo::getTipologia).setHeader("Tipologia");
@@ -58,7 +71,7 @@ class TipologieVeicoloListView extends VerticalLayout {
 
         setSizeFull();
 
-        add(toolbar, tipologiaGrid);
+        add(outerWrapper, tipologiaGrid);
     }
 
     private void createTipologia() {
