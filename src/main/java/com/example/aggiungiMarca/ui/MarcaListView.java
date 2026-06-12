@@ -5,6 +5,9 @@ import com.example.aggiungiMarca.MarcaService;
 import com.example.base.ui.ViewTitle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Dial;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -29,6 +32,7 @@ class MarcaListView extends VerticalLayout {
 
     private final MarcaService marcaService;
 
+    final Dialog formDialog;
     final TextField nomeMarca;
     final Button createBtn;
     final Grid<Marca> marcaGrid;
@@ -38,7 +42,7 @@ class MarcaListView extends VerticalLayout {
         this.marcaService = marcaService;
 
         nomeMarca = new TextField();
-        createBtn = new Button("+", event -> createMarca());
+        createBtn = new Button("Aggiungi", event -> createMarca());
         marcaGrid = new Grid<>();
 
         nomeMarca.setPlaceholder("BMW");
@@ -47,29 +51,29 @@ class MarcaListView extends VerticalLayout {
         nomeMarca.setMinWidth("15em");
         nomeMarca.setClassName("padding-left-form");
 
-        createBtn.setClassName("form-btn");
-        createBtn.setHeightFull();
+        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
 
-        // Contiene titolo e campo form
+        formDialog = createFormDialog();
+
+        var openDialogBtn = new Button("+", e -> formDialog.open());
+        openDialogBtn.setClassName("form-btn");
+        openDialogBtn.setHeightFull();
+
         var toolbar = new HorizontalLayout();
-
-        toolbar.setFlexGrow(1, nomeMarca);
         toolbar.setWrap(true);
         toolbar.setHeightFull();
         toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         toolbar.setAlignItems(Alignment.CENTER);
         toolbar.setClassName("form-standard-style");
-        toolbar.add(new ViewTitle("Lista marche"), nomeMarca);
+        toolbar.add(new ViewTitle("Lista marchi"));
 
-        // Contiene la toolbar ed il bottone
         var outerWrapper = new HorizontalLayout();
-
         outerWrapper.setWidthFull();
         outerWrapper.setSpacing(false);
         outerWrapper.setAlignItems(Alignment.CENTER);
         outerWrapper.setFlexGrow(1, toolbar);
         outerWrapper.setClassName("outer-wrapper-shadow");
-        outerWrapper.add(toolbar, createBtn);
+        outerWrapper.add(toolbar, openDialogBtn);
 
         marcaGrid.setItems(query -> marcaService.list(toSpringPageRequest(query)).stream());
         marcaGrid.addColumn(Marca::getMarca).setHeader("Nome");
@@ -98,6 +102,7 @@ class MarcaListView extends VerticalLayout {
         marcaService.createMarca(nomeMarca.getValue());
         marcaGrid.getDataProvider().refreshAll();
         nomeMarca.clear();
+        formDialog.close();
         Notification.show(nome + " aggiunta!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
     }
 
@@ -105,5 +110,22 @@ class MarcaListView extends VerticalLayout {
         marcaService.deleteMarca(id);
         marcaGrid.getDataProvider().refreshAll();
         Notification.show("Marca eliminata!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
+    }
+
+    private Dialog createFormDialog() {
+
+        var dialog = new Dialog();
+        dialog.setHeaderTitle("Aggiungi marchio");
+        dialog.setMaxWidth("700px");
+
+        var form = new FormLayout(nomeMarca);
+
+        dialog.add(form);
+
+        var annullaBtn = new Button("Annulla", e -> dialog.close());
+
+        dialog.getFooter().add(annullaBtn, createBtn);
+
+        return dialog;
     }
 }

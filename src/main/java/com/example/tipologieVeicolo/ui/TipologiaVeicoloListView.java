@@ -5,6 +5,8 @@ import com.example.tipologieVeicolo.TipologiaVeicoloService;
 import com.example.base.ui.ViewTitle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -24,6 +26,7 @@ class TipologieVeicoloListView extends VerticalLayout {
 
     private final TipologiaVeicoloService tipologiaVeicoloService;
 
+    final Dialog formDialog;
     final TextField nomeTipologia;
     final Button createBtn;
     final Grid<TipologiaVeicolo> tipologiaGrid;
@@ -33,7 +36,7 @@ class TipologieVeicoloListView extends VerticalLayout {
         this.tipologiaVeicoloService = tipologiaVeicoloService;
 
         nomeTipologia = new TextField();
-        createBtn = new Button("+", event -> createTipologia());
+        createBtn = new Button("Aggiungi", event -> createTipologia());
         tipologiaGrid = new Grid<>();
 
         nomeTipologia.setPlaceholder("SUV");
@@ -42,27 +45,29 @@ class TipologieVeicoloListView extends VerticalLayout {
         nomeTipologia.setMinWidth("15em");
         nomeTipologia.setClassName("padding-left-form");
 
-        createBtn.setClassName("form-btn");
-        createBtn.setHeightFull();
+        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
+
+        formDialog = createFormDialog();
+
+        var openDialogBtn = new Button("+", e -> formDialog.open());
+        openDialogBtn.setClassName("form-btn");
+        openDialogBtn.setHeightFull();
 
         var toolbar = new HorizontalLayout();
-
-        toolbar.setFlexGrow(1, nomeTipologia);
         toolbar.setWrap(true);
         toolbar.setHeightFull();
         toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         toolbar.setAlignItems(Alignment.CENTER);
         toolbar.setClassName("form-standard-style");
-        toolbar.add(new ViewTitle("Lista tipologie veicolo"), nomeTipologia);
+        toolbar.add(new ViewTitle("Lista alimentazioni"));
 
         var outerWrapper = new HorizontalLayout();
-
         outerWrapper.setWidthFull();
         outerWrapper.setSpacing(false);
         outerWrapper.setAlignItems(Alignment.CENTER);
         outerWrapper.setFlexGrow(1, toolbar);
         outerWrapper.setClassName("outer-wrapper-shadow");
-        outerWrapper.add(toolbar, createBtn);
+        outerWrapper.add(toolbar, openDialogBtn);
 
         tipologiaGrid.setItems(query -> tipologiaVeicoloService.list(toSpringPageRequest(query)).stream());
         tipologiaGrid.addColumn(TipologiaVeicolo::getTipologia).setHeader("Tipologia");
@@ -91,6 +96,7 @@ class TipologieVeicoloListView extends VerticalLayout {
         tipologiaVeicoloService.createTipologia(nomeTipologia.getValue());
         tipologiaGrid.getDataProvider().refreshAll();
         nomeTipologia.clear();
+        formDialog.close();
         Notification.show(nome + " aggiunta!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
     }
 
@@ -98,5 +104,22 @@ class TipologieVeicoloListView extends VerticalLayout {
         tipologiaVeicoloService.deleteTipologia(id);
         tipologiaGrid.getDataProvider().refreshAll();
         Notification.show("Tipologia eliminata!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
+    }
+
+    private Dialog createFormDialog() {
+
+        var dialog = new Dialog();
+        dialog.setHeaderTitle("Aggiungi tipologia");
+        dialog.setMaxWidth("700px");
+
+        var form = new FormLayout(nomeTipologia);
+
+        dialog.add(form);
+
+        var annullaBtn = new Button("Annulla", e -> dialog.close());
+
+        dialog.getFooter().add(annullaBtn, createBtn);
+
+        return dialog;
     }
 }
