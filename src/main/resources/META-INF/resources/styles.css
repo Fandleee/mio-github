@@ -1,8 +1,23 @@
 /* Add your styles here */
 :root {
-    /*--lumo-base-color: #f0f0f0;*/
+    --nice-blue: #0075e1;
+
+    --standard-box-shadow: 0 0 5px rgb(0 0 0 / 0.17);
 }
 
+vaadin-grid::part(header-cell) {
+    font-weight: 600;
+}
+
+vaadin-grid::part(cell) {
+    padding: 5px;
+    /*--lumo-base-color: #f0f0f0;*/
+    --main-color: #0254a3;
+    /*--lumo-base-color: #f0f0f0;*/
+}
+html, body {
+    background-color: var(--main-color);
+}
 .outer-wrapper-shadow {
     box-shadow: 0 0 5px rgb(0 0 0 / 0.17);
     border-radius: 35px;
@@ -51,12 +66,12 @@
 }
 
 vaadin-app-layout::part(drawer) {
-    background: #ffffff;
+    background: #F3F4F6;
     background-image: none;
 }
 
 vaadin-side-nav-item::part(link):hover {
-    background-color: #0075e1;
+    background-color: #ffffff;
     color: #ffffff;
 }
 
