@@ -125,7 +125,7 @@ public class VeicoliListView extends VerticalLayout {
         toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         toolbar.setAlignItems(Alignment.CENTER);
         toolbar.setClassName("form-standard-style");
-        toolbar.add(new ViewTitle("Lista modelli"));
+        toolbar.add(new ViewTitle("Lista veicoli"));
 
         var outerWrapper = new HorizontalLayout();
         outerWrapper.setWidthFull();

@@ -59,7 +59,7 @@ class TipologieVeicoloListView extends VerticalLayout {
         toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         toolbar.setAlignItems(Alignment.CENTER);
         toolbar.setClassName("form-standard-style");
-        toolbar.add(new ViewTitle("Lista alimentazioni"));
+        toolbar.add(new ViewTitle("Lista tipologie"));
 
         var outerWrapper = new HorizontalLayout();
         outerWrapper.setWidthFull();
