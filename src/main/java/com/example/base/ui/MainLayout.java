@@ -32,7 +32,7 @@ public final class MainLayout extends AppLayout {
         Span nome = new Span("Alessio");
         nome.getStyle().set("font-size", "18px");
         nome.getStyle().set("font-weight", "600");
-        nome.getStyle().set("color", "#1E90FF");
+        nome.getStyle().set("color", "black");
         nome.getStyle().set("margin", "0");
 
         HorizontalLayout header = new HorizontalLayout(avatar, nome);

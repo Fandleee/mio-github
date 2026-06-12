@@ -1,8 +1,8 @@
 /* Add your styles here */
 :root {
     --nice-blue: #0075e1;
-
-    --standard-box-shadow: 0 0 5px rgb(0 0 0 / 0.17);
+    --main-color: #89a2c5;
+    /*--standard-box-shadow: 0 0 5px rgb(0 0 0 / 0.17);*/
 }
 
 vaadin-grid::part(header-cell) {
@@ -13,9 +13,12 @@ vaadin-grid::part(cell) {
     padding: 5px;
 }
 
+vaadin-grid::part(header-cell) {
+    border-radius: 25px;
+}
+
 vaadin-grid::part(cell) {
     padding: 5px;
-    --main-color: #0254a3;
 }
 
 html, body {
@@ -23,8 +26,9 @@ html, body {
 }
 
 .outer-wrapper-shadow {
-    box-shadow: var(--standard-box-shadow);
+    /*box-shadow: var(--standard-box-shadow);*/
     border-radius: 35px;
+    background-color: white;
 }
 
 .form-standard-style {
@@ -36,7 +40,7 @@ html, body {
 }
 
 .form-btn {
-    box-shadow: var(--standard-box-shadow);
+    /*box-shadow: var(--standard-box-shadow);*/
 
     border-end-end-radius: 35px;
     border-start-end-radius: 35px;
@@ -54,7 +58,7 @@ html, body {
 }
 
 .grid-style  {
-    box-shadow: var(--standard-box-shadow);
+    /*box-shadow: var(--standard-box-shadow);*/
     border-radius: 25px;
 }
 
@@ -75,11 +79,16 @@ html, body {
 }
 
 vaadin-app-layout::part(drawer) {
-    background: #F3F4F6;
-    background-image: none;
+    background: var(--main-color);
+    border: none;
+}
+
+vaadin-side-nav-item::part(link) {
+    font-weight: 600;
 }
 
 vaadin-side-nav-item::part(link):hover {
+    --lumo-primary-color: transparent;
     background-color: #ffffff;
     color: #ffffff;
 }
@@ -90,10 +99,24 @@ vaadin-side-nav-item::part(link):hover {
     transform-origin: left center;
 }
 
+vaadin-side-nav-item::part(link) {
+   padding-top: 20px;
+   padding-bottom: 20px;
+}
+
+vaadin-side-nav-item[active]::part(item) {
+    background-color: transparent;
+}
+
 vaadin-side-nav-item::part(link):hover {
-    background-color: #0075e1;
+    background-color: var(--nice-blue);
     color: #ffffff;
 }
+
+vaadin-side-nav-item[active]::part(item) {
+    background-color: var(--main-color);
+}
+
 
 vaadin-side-nav-item:hover .nav-label {
     transform: scale(1.1);
