@@ -15,15 +15,28 @@
     font-size: var(--lumo-font-size-s);
 }
 
-/* TODO: This is only for demo purposes. You can delete it. */
-vaadin-side-nav:has(vaadin-side-nav-item:only-child)::after {
-    display: block;
-    content: "More menu items will appear here when you add more views.";
-    font-size: var(--lumo-font-size-s);
-    color: var(--vaadin-text-color-secondary);
-    box-sizing: border-box;
-    padding: 1em;
-    max-width: 14em;
-    min-width: 100%;
-    white-space: normal;
+
+vaadin-app-layout::part(drawer) {
+    background: #ffffff;
+    background-image: none;
 }
+
+vaadin-side-nav-item::part(link):hover {
+    background-color: #0075e1;
+    color: #ffffff;
+}
+.nav-label {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    transform-origin: left center;
+}
+
+vaadin-side-nav-item::part(link):hover {
+    background-color: #0075e1;
+    color: #ffffff;
+}
+
+vaadin-side-nav-item:hover .nav-label {
+    transform: scale(1.1);
+}
+
