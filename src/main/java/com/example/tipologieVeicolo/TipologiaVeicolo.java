@@ -23,6 +23,10 @@ public class TipologiaVeicolo {
         setTipologia(tipologia);
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
     public String getTipologia() {
         return this.tipologia;
     }

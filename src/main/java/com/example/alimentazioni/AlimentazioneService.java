@@ -25,4 +25,8 @@ public class AlimentazioneService {
     public List<Alimentazione> list(Pageable pageable) {
         return alimentazioneRepository.findAllBy(pageable).toList();
     }
+
+    public void deleteAlimentazione(Long id){
+        alimentazioneRepository.deleteById(id);
+    }
 }

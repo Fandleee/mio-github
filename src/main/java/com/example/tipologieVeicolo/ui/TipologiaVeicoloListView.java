@@ -5,6 +5,8 @@ import com.example.tipologieVeicolo.TipologiaVeicoloService;
 import com.example.base.ui.ViewTitle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -24,6 +26,7 @@ class TipologieVeicoloListView extends VerticalLayout {
 
     private final TipologiaVeicoloService tipologiaVeicoloService;
 
+    final Dialog formDialog;
     final TextField nomeTipologia;
     final Button createBtn;
     final Grid<TipologiaVeicolo> tipologiaGrid;
@@ -40,25 +43,45 @@ class TipologieVeicoloListView extends VerticalLayout {
         nomeTipologia.setAriaLabel("Tipologia veicolo");
         nomeTipologia.setMaxLength(TipologiaVeicolo.NOME_MAX_LENGTH);
         nomeTipologia.setMinWidth("15em");
+        nomeTipologia.setClassName("padding-left-form");
 
         createBtn.addThemeVariants(ButtonVariant.PRIMARY);
 
+        formDialog = createFormDialog();
+
+        var openDialogBtn = new Button("+", e -> formDialog.open());
+        openDialogBtn.setClassName("form-btn");
+        openDialogBtn.setHeightFull();
+
         var toolbar = new HorizontalLayout();
-
-        toolbar.add(new ViewTitle("Lista tipologie veicolo"), nomeTipologia, createBtn);
-
-        toolbar.setFlexGrow(1, nomeTipologia);
         toolbar.setWrap(true);
-        toolbar.setWidthFull();
+        toolbar.setHeightFull();
+        toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        toolbar.setAlignItems(Alignment.CENTER);
+        toolbar.setClassName("form-standard-style");
+        toolbar.add(new ViewTitle("Lista tipologie"));
+
+        var outerWrapper = new HorizontalLayout();
+        outerWrapper.setWidthFull();
+        outerWrapper.setSpacing(false);
+        outerWrapper.setAlignItems(Alignment.CENTER);
+        outerWrapper.setFlexGrow(1, toolbar);
+        outerWrapper.setClassName("outer-wrapper-shadow");
+        outerWrapper.add(toolbar, openDialogBtn);
 
         tipologiaGrid.setItems(query -> tipologiaVeicoloService.list(toSpringPageRequest(query)).stream());
         tipologiaGrid.addColumn(TipologiaVeicolo::getTipologia).setHeader("Tipologia");
+        tipologiaGrid.addComponentColumn(tipologiaVeicolo -> {
+            Button elimina = new Button("Elimina", click -> deleteTipologiaVeicolo(tipologiaVeicolo.getId()));
+            elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            return elimina;
+        }).setHeader("Azioni");
         tipologiaGrid.setEmptyStateText("Non ci sono tipologie di veicolo registrate");
         tipologiaGrid.setSizeFull();
 
         setSizeFull();
 
-        add(toolbar, tipologiaGrid);
+        add(outerWrapper, tipologiaGrid);
     }
 
     private void createTipologia() {
@@ -73,6 +96,30 @@ class TipologieVeicoloListView extends VerticalLayout {
         tipologiaVeicoloService.createTipologia(nomeTipologia.getValue());
         tipologiaGrid.getDataProvider().refreshAll();
         nomeTipologia.clear();
+        formDialog.close();
         Notification.show(nome + " aggiunta!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
+    }
+
+    private void deleteTipologiaVeicolo(Long id){
+        tipologiaVeicoloService.deleteTipologia(id);
+        tipologiaGrid.getDataProvider().refreshAll();
+        Notification.show("Tipologia eliminata!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
+    }
+
+    private Dialog createFormDialog() {
+
+        var dialog = new Dialog();
+        dialog.setHeaderTitle("Aggiungi tipologia");
+        dialog.setMaxWidth("700px");
+
+        var form = new FormLayout(nomeTipologia);
+
+        dialog.add(form);
+
+        var annullaBtn = new Button("Annulla", e -> dialog.close());
+
+        dialog.getFooter().add(annullaBtn, createBtn);
+
+        return dialog;
     }
 }

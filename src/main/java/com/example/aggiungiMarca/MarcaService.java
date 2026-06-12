@@ -26,4 +26,8 @@ public class MarcaService {
         return marcaRepository.findAllBy(pageable).toList();
     }
 
+    @Transactional
+    public void deleteMarca(Long id){
+        marcaRepository.deleteById(id);
+    }
 }

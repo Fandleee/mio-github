@@ -5,6 +5,8 @@ import com.example.alimentazioni.AlimentazioneService;
 import com.example.base.ui.ViewTitle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -27,6 +29,7 @@ class AlimentazioniListView extends VerticalLayout {
 
     private final AlimentazioneService alimentazioneService;
 
+    final Dialog formDialog;
     final TextField nomeAlimentazione;
     final Button createBtn;
     final Grid<Alimentazione> alimentazioneGrid;
@@ -43,25 +46,45 @@ class AlimentazioniListView extends VerticalLayout {
         nomeAlimentazione.setAriaLabel("Nome alimentazione");
         nomeAlimentazione.setMaxLength(Alimentazione.NOME_MAX_LENGTH);
         nomeAlimentazione.setMinWidth("15em");
+        nomeAlimentazione.setClassName("padding-left-form");
 
         createBtn.addThemeVariants(ButtonVariant.PRIMARY);
 
+        formDialog = createFormDialog();
+
+        var openDialogBtn = new Button("+", e -> formDialog.open());
+        openDialogBtn.setClassName("form-btn");
+        openDialogBtn.setHeightFull();
+
         var toolbar = new HorizontalLayout();
-
-        toolbar.add(new ViewTitle("Lista alimentazioni"), nomeAlimentazione, createBtn);
-
-        toolbar.setFlexGrow(1, nomeAlimentazione);
         toolbar.setWrap(true);
-        toolbar.setWidthFull();
+        toolbar.setHeightFull();
+        toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        toolbar.setAlignItems(Alignment.CENTER);
+        toolbar.setClassName("form-standard-style");
+        toolbar.add(new ViewTitle("Lista alimentazioni"));
+
+        var outerWrapper = new HorizontalLayout();
+        outerWrapper.setWidthFull();
+        outerWrapper.setSpacing(false);
+        outerWrapper.setAlignItems(Alignment.CENTER);
+        outerWrapper.setFlexGrow(1, toolbar);
+        outerWrapper.setClassName("outer-wrapper-shadow");
+        outerWrapper.add(toolbar, openDialogBtn);
 
         alimentazioneGrid.setItems(query -> alimentazioneService.list(toSpringPageRequest(query)).stream());
         alimentazioneGrid.addColumn(Alimentazione::getAlimentazione).setHeader("Nome");
+        alimentazioneGrid.addComponentColumn(alimentazione -> {
+            Button elimina = new Button("Elimina", click -> deleteAlimentazione(alimentazione.getId()));
+            elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            return elimina;
+        }).setHeader("Azioni");
         alimentazioneGrid.setEmptyStateText("Non ci sono alimentazioni registrate");
         alimentazioneGrid.setSizeFull();
 
         setSizeFull();
 
-        add(toolbar, alimentazioneGrid);
+        add(outerWrapper, alimentazioneGrid);
     }
 
     private void createAlimentazione() {
@@ -76,6 +99,31 @@ class AlimentazioniListView extends VerticalLayout {
         alimentazioneService.createAlimentazione(nomeAlimentazione.getValue());
         alimentazioneGrid.getDataProvider().refreshAll();
         nomeAlimentazione.clear();
+        formDialog.close();
         Notification.show(nome + " aggiunta!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
     }
+
+    private void deleteAlimentazione(Long id) {
+        alimentazioneService.deleteAlimentazione(id);
+        alimentazioneGrid.getDataProvider().refreshAll();
+        Notification.show("Alimentazione eliminata!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
+    }
+
+    private Dialog createFormDialog() {
+
+        var dialog = new Dialog();
+        dialog.setHeaderTitle("Aggiungi alimentazione");
+        dialog.setMaxWidth("700px");
+
+        var form = new FormLayout(nomeAlimentazione);
+
+        dialog.add(form);
+
+        var annullaBtn = new Button("Annulla", e -> dialog.close());
+
+        dialog.getFooter().add(annullaBtn, createBtn);
+
+        return dialog;
+    }
+
 }

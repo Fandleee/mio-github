@@ -10,6 +10,8 @@ import com.example.veicolo.VeicoloService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -42,6 +44,7 @@ public class VeicoliListView extends VerticalLayout {
     final IntegerField prenotataPerGiorni;
     final DatePicker dataScadenzaAssicurazione;
 
+    final Dialog formDialog;
     final Button createBtn;
     final Grid<Veicolo> veicoloGrid;
 
@@ -59,6 +62,7 @@ public class VeicoliListView extends VerticalLayout {
         createBtn = new Button("Aggiungi", event -> createVeicolo());
         veicoloGrid = new Grid<>();
 
+        formDialog = createFormDialog();
 
         // Marca Select
         marcaSelect.setLabel("Marca");
@@ -110,14 +114,26 @@ public class VeicoliListView extends VerticalLayout {
         createBtn.setText("Aggiungi");
         createBtn.addThemeVariants(ButtonVariant.PRIMARY);
 
-        // Form
-        var toolbar = new HorizontalLayout();
-        toolbar.add(new ViewTitle("Lista veicoli"), marcaSelect, modelliSelect, targa, dataUltimaPrenotazione, prenotataPerGiorni, dataScadenzaAssicurazione, createBtn);
 
-        toolbar.setFlexGrow(1);
+        var openDialogBtn = new Button("+", event -> formDialog.open());
+        openDialogBtn.setClassName("form-btn");
+        openDialogBtn.setHeightFull();
+
+        var toolbar = new HorizontalLayout();
         toolbar.setWrap(true);
-        toolbar.setWidthFull();
+        toolbar.setHeightFull();
+        toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         toolbar.setAlignItems(Alignment.CENTER);
+        toolbar.setClassName("form-standard-style");
+        toolbar.add(new ViewTitle("Lista veicoli"));
+
+        var outerWrapper = new HorizontalLayout();
+        outerWrapper.setWidthFull();
+        outerWrapper.setSpacing(false);
+        outerWrapper.setAlignItems(Alignment.CENTER);
+        outerWrapper.setFlexGrow(1, toolbar);
+        outerWrapper.setClassName("outer-wrapper-shadow");
+        outerWrapper.add(toolbar, openDialogBtn);
 
         // Visualizzazione record
         veicoloGrid.setItems(query -> veicoloService.list(toSpringPageRequest(query)).stream());
@@ -140,7 +156,7 @@ public class VeicoliListView extends VerticalLayout {
 
         setSizeFull();
 
-        add(toolbar, veicoloGrid);
+        add(outerWrapper, veicoloGrid);
     }
 
     private void createVeicolo() {
@@ -194,7 +210,7 @@ public class VeicoliListView extends VerticalLayout {
         dataUltimaPrenotazione.setValue(null);
         prenotataPerGiorni.setValue(null);
         dataScadenzaAssicurazione.setValue(null);
-
+        formDialog.close();
         Notification.show(targaValore + " aggiunto!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
     }
 
@@ -202,5 +218,30 @@ public class VeicoliListView extends VerticalLayout {
         veicoloService.deleteVeicolo(id);
         veicoloGrid.getDataProvider().refreshAll();
         Notification.show("Veicolo eliminato!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
+    }
+
+    private Dialog createFormDialog() {
+
+        var dialog = new Dialog();
+
+        dialog.setHeaderTitle("Aggiungi modello");
+        dialog.setMaxWidth("700px");
+
+        var form = new FormLayout(marcaSelect, modelliSelect, targa, dataUltimaPrenotazione, prenotataPerGiorni, dataScadenzaAssicurazione);
+        form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 6));
+        form.setColspan(marcaSelect ,3);
+        form.setColspan(modelliSelect ,3);
+        form.setColspan(targa ,3);
+        form.setColspan(dataUltimaPrenotazione ,3);
+        form.setColspan(prenotataPerGiorni ,3);
+        form.setColspan(dataScadenzaAssicurazione ,3);
+
+        dialog.add(form);
+
+        var annullaBtn = new Button("Annulla", e -> dialog.close());
+
+        dialog.getFooter().add(annullaBtn, createBtn);
+
+        return dialog;
     }
 }
