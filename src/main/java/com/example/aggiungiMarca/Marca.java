@@ -24,6 +24,10 @@ public class Marca {
         setMarca(marca);
     }
 
+    public Long getId(){
+        return this.id;
+    }
+
     public String getMarca(){
         return this.marca;
     }

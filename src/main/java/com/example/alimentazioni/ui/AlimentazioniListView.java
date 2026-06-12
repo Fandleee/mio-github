@@ -69,6 +69,11 @@ class AlimentazioniListView extends VerticalLayout {
 
         alimentazioneGrid.setItems(query -> alimentazioneService.list(toSpringPageRequest(query)).stream());
         alimentazioneGrid.addColumn(Alimentazione::getAlimentazione).setHeader("Nome");
+        alimentazioneGrid.addComponentColumn(alimentazione -> {
+            Button elimina = new Button("Elimina", click -> deleteAlimentazione(alimentazione.getId()));
+            elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            return elimina;
+        }).setHeader("Azioni");
         alimentazioneGrid.setEmptyStateText("Non ci sono alimentazioni registrate");
         alimentazioneGrid.setSizeFull();
 
@@ -90,5 +95,11 @@ class AlimentazioniListView extends VerticalLayout {
         alimentazioneGrid.getDataProvider().refreshAll();
         nomeAlimentazione.clear();
         Notification.show(nome + " aggiunta!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
+    }
+
+    private void deleteAlimentazione(Long id) {
+        alimentazioneService.deleteAlimentazione(id);
+        alimentazioneGrid.getDataProvider().refreshAll();
+        Notification.show("Alimentazione eliminata!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
     }
 }
