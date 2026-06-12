@@ -49,3 +49,28 @@
     color: var(--vaadin-text-color-secondary);
     font-size: var(--lumo-font-size-s);
 }
+
+vaadin-app-layout::part(drawer) {
+    background: #ffffff;
+    background-image: none;
+}
+
+vaadin-side-nav-item::part(link):hover {
+    background-color: #0075e1;
+    color: #ffffff;
+}
+
+.nav-label {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    transform-origin: left center;
+}
+
+vaadin-side-nav-item::part(link):hover {
+    background-color: #0075e1;
+    color: #ffffff;
+}
+
+vaadin-side-nav-item:hover .nav-label {
+    transform: scale(1.1);
+}
