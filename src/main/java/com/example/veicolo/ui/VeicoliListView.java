@@ -13,6 +13,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -137,6 +138,7 @@ public class VeicoliListView extends VerticalLayout {
 
         // Visualizzazione record
         veicoloGrid.setItems(query -> veicoloService.list(toSpringPageRequest(query)).stream());
+
         veicoloGrid.addColumn(veicolo -> veicolo.getMarca().getMarca()).setHeader("Marca");
         veicoloGrid.addColumn(veicolo -> veicolo.getNomeModello().getNomeModello()).setHeader("Modello");
         veicoloGrid.addColumn(Veicolo::getTarga).setHeader("Targa");
@@ -146,12 +148,22 @@ public class VeicoliListView extends VerticalLayout {
         veicoloGrid.addColumn(Veicolo::getDataPrimaDisponibilita).setHeader("Prima data di disponibilita");
         veicoloGrid.addColumn(Veicolo::getDataScadenzaAssicurazione).setHeader("Data scadenza assicurazione");
         veicoloGrid.addColumn(Veicolo::geteAssicurato).setHeader("Assicurazione valida?");
+
         veicoloGrid.addComponentColumn(veicolo -> {
             Button elimina = new Button("Elimina", click -> deleteVeicolo(veicolo.getId()));
             elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
             return elimina;
         }).setHeader("Azioni");
+
         veicoloGrid.setEmptyStateText("Non ci sono veicoli registrati");
+
+        veicoloGrid.setClassName("grid-style");
+        veicoloGrid.addThemeVariants(
+                GridVariant.LUMO_NO_BORDER,
+                GridVariant.LUMO_ROW_STRIPES,
+                GridVariant.NO_ROW_BORDERS
+                );
+
         veicoloGrid.setSizeFull();
 
         setSizeFull();

@@ -14,6 +14,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -182,12 +183,22 @@ public class ModelliListView extends VerticalLayout {
         modelloGrid.addColumn(Modello::getNumeroPasseggeri).setHeader("Numero passeggeri");
         modelloGrid.addColumn(Modello::getCostoNoleggioGiornaliero).setHeader("Costo giornaliero in euro");
         modelloGrid.addColumn(Modello::getQuantita).setHeader("Quantita");
+
         modelloGrid.addComponentColumn(modello -> {
             Button elimina = new Button("Elimina", click -> deleteModello(modello.getId()));
             elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
             return elimina;
         }).setHeader("Azioni");
+
         modelloGrid.setEmptyStateText("Non ci sono marchi registrati");
+
+        modelloGrid.setClassName("grid-style");
+        modelloGrid.addThemeVariants(
+                GridVariant.LUMO_NO_BORDER,
+                GridVariant.LUMO_ROW_STRIPES,
+                GridVariant.NO_ROW_BORDERS
+        );
+
         modelloGrid.setSizeFull();
 
         setSizeFull();
