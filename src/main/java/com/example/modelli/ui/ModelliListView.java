@@ -11,6 +11,8 @@ import com.example.modelli.Modello;
 import com.example.tipologieVeicolo.TipologiaVeicolo;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -43,6 +45,7 @@ public class ModelliListView extends VerticalLayout {
     final IntegerField costoGiornaliero;
     final IntegerField quantita;
 
+    final Dialog formDialog;
     final Button createBtn;
     final Grid<Modello> modelloGrid;
 
@@ -66,8 +69,11 @@ public class ModelliListView extends VerticalLayout {
         quantita = new IntegerField();
 
         createBtn = new Button("Aggiungi", event -> createModello());
+        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
+
         modelloGrid = new Grid<>();
 
+        formDialog = createFormDialog();
 
         // Marca Select
         marcaSelect.setLabel("Marca");
@@ -86,7 +92,7 @@ public class ModelliListView extends VerticalLayout {
         nomeModello.setLabel("Nome modello");
         nomeModello.setAriaLabel("Nome modello");
         nomeModello.setMaxLength(Modello.NOME_MODELLO_MAX_LENGTH);
-        nomeModello.setMinWidth("15em");
+        nomeModello.setMinWidth("10em");
 
         // Tipologia Veicolo Select
         tipologiaVeicoloSelect.setLabel("Tipologia veicolo");
@@ -102,7 +108,7 @@ public class ModelliListView extends VerticalLayout {
 
         // Numero Cilindri
         numeroCilindri.setLabel("Numero cilindri");
-        numeroCilindri.setItems(1, 2, 3, 4, 5, 6, 8, 10, 12);
+        numeroCilindri.setItems(0, 1, 2, 3, 4, 5, 6, 8, 10, 12);
 
         // Cilindrata
         cilindrata.setPlaceholder("Es. 1998");
@@ -145,20 +151,26 @@ public class ModelliListView extends VerticalLayout {
         quantita.setMin(0);
         quantita.setMinWidth("10em");
 
-        // Button
-        createBtn.setText("Aggiungi");
-        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
 
+        var openDialogBtn = new Button("+", e -> formDialog.open());
+        openDialogBtn.setClassName("form-btn");
+        openDialogBtn.setHeightFull();
 
-        // Form
         var toolbar = new HorizontalLayout();
-
-        toolbar.add(new ViewTitle("Lista modelli"), marcaSelect, nomeModello, tipologiaVeicoloSelect, numeroCilindri, cilindrata, alimentazioneSelect, numeroPasseggeri, costoGiornaliero, quantita,  createBtn);
-
-        toolbar.setFlexGrow(1);
         toolbar.setWrap(true);
-        toolbar.setWidthFull();
+        toolbar.setHeightFull();
+        toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         toolbar.setAlignItems(Alignment.CENTER);
+        toolbar.setClassName("form-standard-style");
+        toolbar.add(new ViewTitle("Lista modelli"));
+
+        var outerWrapper = new HorizontalLayout();
+        outerWrapper.setWidthFull();
+        outerWrapper.setSpacing(false);
+        outerWrapper.setAlignItems(Alignment.CENTER);
+        outerWrapper.setFlexGrow(1, toolbar);
+        outerWrapper.setClassName("outer-wrapper-shadow");
+        outerWrapper.add(toolbar, openDialogBtn);
 
 
         // Visualizzazione record
@@ -180,7 +192,7 @@ public class ModelliListView extends VerticalLayout {
 
         setSizeFull();
 
-        add(toolbar, modelloGrid);
+        add(outerWrapper, modelloGrid);
     }
 
     private void createModello() {
@@ -255,6 +267,7 @@ public class ModelliListView extends VerticalLayout {
         numeroPasseggeri.clear();
         costoGiornaliero.clear();
         quantita.clear();
+        formDialog.close();
         Notification.show(nome + " aggiunto!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
     }
 
@@ -262,5 +275,33 @@ public class ModelliListView extends VerticalLayout {
         modelloService.deleteModello(id);
         modelloGrid.getDataProvider().refreshAll();
         Notification.show("Modello eliminato!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
+    }
+
+    private Dialog createFormDialog() {
+
+        var dialog = new Dialog();
+
+        dialog.setHeaderTitle("Aggiungi modello");
+        dialog.setMaxWidth("700px");
+
+        var form = new FormLayout(marcaSelect, nomeModello, tipologiaVeicoloSelect, numeroCilindri, alimentazioneSelect, cilindrata, numeroPasseggeri, costoGiornaliero, quantita);
+        form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 6));
+        form.setColspan(marcaSelect ,3);
+        form.setColspan(nomeModello ,3);
+        form.setColspan(tipologiaVeicoloSelect ,3);
+        form.setColspan(numeroCilindri ,3);
+        form.setColspan(alimentazioneSelect ,3);
+        form.setColspan(cilindrata ,3);
+        form.setColspan(numeroPasseggeri ,2);
+        form.setColspan(costoGiornaliero ,2);
+        form.setColspan(quantita ,2);
+
+        dialog.add(form);
+
+        var annullaBtn = new Button("Annulla", e -> dialog.close());
+
+        dialog.getFooter().add(annullaBtn, createBtn);
+
+        return dialog;
     }
 }
