@@ -25,4 +25,9 @@ public class TipologiaVeicoloService {
     public List<TipologiaVeicolo> list(Pageable pageable) {
         return tipologiaVeicoloRepository.findAllBy(pageable).toList();
     }
+
+    @Transactional
+    public void deleteTipologia(Long id){
+        tipologiaVeicoloRepository.deleteById(id);
+    }
 }

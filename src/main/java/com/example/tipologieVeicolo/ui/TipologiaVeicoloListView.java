@@ -66,6 +66,11 @@ class TipologieVeicoloListView extends VerticalLayout {
 
         tipologiaGrid.setItems(query -> tipologiaVeicoloService.list(toSpringPageRequest(query)).stream());
         tipologiaGrid.addColumn(TipologiaVeicolo::getTipologia).setHeader("Tipologia");
+        tipologiaGrid.addComponentColumn(tipologiaVeicolo -> {
+            Button elimina = new Button("Elimina", click -> deleteTipologiaVeicolo(tipologiaVeicolo.getId()));
+            elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            return elimina;
+        }).setHeader("Azioni");
         tipologiaGrid.setEmptyStateText("Non ci sono tipologie di veicolo registrate");
         tipologiaGrid.setSizeFull();
 
@@ -87,5 +92,11 @@ class TipologieVeicoloListView extends VerticalLayout {
         tipologiaGrid.getDataProvider().refreshAll();
         nomeTipologia.clear();
         Notification.show(nome + " aggiunta!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
+    }
+
+    private void deleteTipologiaVeicolo(Long id){
+        tipologiaVeicoloService.deleteTipologia(id);
+        tipologiaGrid.getDataProvider().refreshAll();
+        Notification.show("Tipologia eliminata!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
     }
 }

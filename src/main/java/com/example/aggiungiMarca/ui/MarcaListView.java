@@ -73,6 +73,11 @@ class MarcaListView extends VerticalLayout {
 
         marcaGrid.setItems(query -> marcaService.list(toSpringPageRequest(query)).stream());
         marcaGrid.addColumn(Marca::getMarca).setHeader("Nome");
+        marcaGrid.addComponentColumn(marca -> {
+            Button elimina = new Button("Elimina", click -> deleteMarca(marca.getId()));
+            elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            return elimina;
+        }).setHeader("Azioni");
         marcaGrid.setEmptyStateText("Non ci sono marchi registrati");
         marcaGrid.setSizeFull();
 
@@ -94,5 +99,11 @@ class MarcaListView extends VerticalLayout {
         marcaGrid.getDataProvider().refreshAll();
         nomeMarca.clear();
         Notification.show(nome + " aggiunta!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
+    }
+
+    private void deleteMarca(Long id){
+        marcaService.deleteMarca(id);
+        marcaGrid.getDataProvider().refreshAll();
+        Notification.show("Marca eliminata!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
     }
 }
