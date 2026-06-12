@@ -13,6 +13,15 @@ vaadin-grid::part(cell) {
     padding: 5px;
 }
 
+vaadin-grid::part(cell) {
+    padding: 5px;
+    --main-color: #0254a3;
+}
+
+html, body {
+    background-color: var(--main-color);
+}
+
 .outer-wrapper-shadow {
     box-shadow: var(--standard-box-shadow);
     border-radius: 35px;
@@ -66,12 +75,12 @@ vaadin-grid::part(cell) {
 }
 
 vaadin-app-layout::part(drawer) {
-    background: #ffffff;
+    background: #F3F4F6;
     background-image: none;
 }
 
 vaadin-side-nav-item::part(link):hover {
-    background-color: #0075e1;
+    background-color: #ffffff;
     color: #ffffff;
 }
 

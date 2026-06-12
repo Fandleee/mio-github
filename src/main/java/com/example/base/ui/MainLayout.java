@@ -27,10 +27,12 @@ public final class MainLayout extends AppLayout {
     private Component createApplicationHeader() {
         Avatar avatar = new Avatar("Alessio");
         avatar.getStyle().set("margin-left", "10px");
+        avatar.getStyle().set("background-color", "#71BC68");
+        avatar.getStyle().set("--vaadin-avatar-text-color", "#000000");
         Span nome = new Span("Alessio");
         nome.getStyle().set("font-size", "18px");
         nome.getStyle().set("font-weight", "600");
-        nome.getStyle().set("color", "#000000");
+        nome.getStyle().set("color", "#1E90FF");
         nome.getStyle().set("margin", "0");
 
         HorizontalLayout header = new HorizontalLayout(avatar, nome);
@@ -38,9 +40,14 @@ public final class MainLayout extends AppLayout {
         header.setMargin(false);
         header.setSpacing(true);
         header.setAlignItems(FlexComponent.Alignment.CENTER);
-        header.setWidthFull();
+
+        header.setWidth("220px");
+        header.getStyle().set("margin-left", "18px");
+        header.getStyle().set("margin-top", "10px");
         header.getStyle().set("padding", "10px");
         header.getStyle().set("background-color", "#ffffff");
+        header.getStyle().set("border-radius", "20px");
+        header.getStyle().set("margin-bottom", "12px");
 
         return header;
     }
@@ -63,7 +70,7 @@ public final class MainLayout extends AppLayout {
         Scroller scroller = new Scroller(sideNav);
         scroller.addThemeVariants(ScrollerVariant.OVERFLOW_INDICATORS);
         scroller.setWidthFull();
-        scroller.setHeight("800px");
+        scroller.setHeight("785px");
 
         Component footer = createApplicationFooter();
 
@@ -74,7 +81,7 @@ public final class MainLayout extends AppLayout {
         drawerBox.setWidth("220px");
         drawerBox.setAlignItems(FlexComponent.Alignment.STRETCH);
 
-        drawerBox.getStyle().set("background-color", "#e8ebef");
+        drawerBox.getStyle().set("background-color", "#ffffff");
         drawerBox.getStyle().set("border-radius", "10px");
         drawerBox.getStyle().set("overflow", "hidden");
 
@@ -102,7 +109,7 @@ public final class MainLayout extends AppLayout {
         footer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
         footer.getStyle().set("gap", "6px");
-        footer.getStyle().set("background-color", "e8ebef");
+        footer.getStyle().set("background-color", "#ffffff");
         footer.getStyle().set("padding-top", "8px");
         footer.getStyle().set("padding-bottom", "8px");
 
