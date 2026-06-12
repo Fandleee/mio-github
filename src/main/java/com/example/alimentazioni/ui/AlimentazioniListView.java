@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -74,12 +75,22 @@ class AlimentazioniListView extends VerticalLayout {
 
         alimentazioneGrid.setItems(query -> alimentazioneService.list(toSpringPageRequest(query)).stream());
         alimentazioneGrid.addColumn(Alimentazione::getAlimentazione).setHeader("Nome");
+
         alimentazioneGrid.addComponentColumn(alimentazione -> {
             Button elimina = new Button("Elimina", click -> deleteAlimentazione(alimentazione.getId()));
             elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
             return elimina;
         }).setHeader("Azioni");
+
         alimentazioneGrid.setEmptyStateText("Non ci sono alimentazioni registrate");
+
+        alimentazioneGrid.setClassName("grid-style");
+        alimentazioneGrid.addThemeVariants(
+                GridVariant.LUMO_NO_BORDER,
+                GridVariant.LUMO_ROW_STRIPES,
+                GridVariant.NO_ROW_BORDERS
+        );
+
         alimentazioneGrid.setSizeFull();
 
         setSizeFull();

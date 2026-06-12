@@ -11,15 +11,19 @@ vaadin-grid::part(header-cell) {
 
 vaadin-grid::part(cell) {
     padding: 5px;
-    /*--lumo-base-color: #f0f0f0;*/
-    --main-color: #0254a3;
-    /*--lumo-base-color: #f0f0f0;*/
 }
+
+vaadin-grid::part(cell) {
+    padding: 5px;
+    --main-color: #0254a3;
+}
+
 html, body {
     background-color: var(--main-color);
 }
+
 .outer-wrapper-shadow {
-    box-shadow: 0 0 5px rgb(0 0 0 / 0.17);
+    box-shadow: var(--standard-box-shadow);
     border-radius: 35px;
 }
 
@@ -32,14 +36,14 @@ html, body {
 }
 
 .form-btn {
-    box-shadow: 0 0 5px rgb(0 0 0 / 0.17);
+    box-shadow: var(--standard-box-shadow);
 
     border-end-end-radius: 35px;
     border-start-end-radius: 35px;
     border-start-start-radius: 0;
     border-end-start-radius: 0;
 
-    background-color: #5050ff;
+    background-color: var(--nice-blue);
     color: white;
 
     font-weight: bolder;
@@ -47,6 +51,11 @@ html, body {
 
     padding-left: 10px;
     padding-bottom: 5px;
+}
+
+.grid-style  {
+    box-shadow: var(--standard-box-shadow);
+    border-radius: 25px;
 }
 
 

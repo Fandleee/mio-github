@@ -9,6 +9,7 @@ import com.vaadin.flow.component.charts.model.Dial;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -77,12 +78,22 @@ class MarcaListView extends VerticalLayout {
 
         marcaGrid.setItems(query -> marcaService.list(toSpringPageRequest(query)).stream());
         marcaGrid.addColumn(Marca::getMarca).setHeader("Nome");
+
         marcaGrid.addComponentColumn(marca -> {
             Button elimina = new Button("Elimina", click -> deleteMarca(marca.getId()));
             elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
             return elimina;
         }).setHeader("Azioni");
+
         marcaGrid.setEmptyStateText("Non ci sono marchi registrati");
+
+        marcaGrid.setClassName("grid-style");
+        marcaGrid.addThemeVariants(
+                GridVariant.LUMO_NO_BORDER,
+                GridVariant.LUMO_ROW_STRIPES,
+                GridVariant.NO_ROW_BORDERS
+        );
+
         marcaGrid.setSizeFull();
 
         setSizeFull();

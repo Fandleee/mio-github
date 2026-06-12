@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -65,18 +66,29 @@ class TipologieVeicoloListView extends VerticalLayout {
         outerWrapper.setWidthFull();
         outerWrapper.setSpacing(false);
         outerWrapper.setAlignItems(Alignment.CENTER);
+        
         outerWrapper.setFlexGrow(1, toolbar);
         outerWrapper.setClassName("outer-wrapper-shadow");
         outerWrapper.add(toolbar, openDialogBtn);
 
         tipologiaGrid.setItems(query -> tipologiaVeicoloService.list(toSpringPageRequest(query)).stream());
         tipologiaGrid.addColumn(TipologiaVeicolo::getTipologia).setHeader("Tipologia");
+
         tipologiaGrid.addComponentColumn(tipologiaVeicolo -> {
             Button elimina = new Button("Elimina", click -> deleteTipologiaVeicolo(tipologiaVeicolo.getId()));
             elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
             return elimina;
         }).setHeader("Azioni");
+
         tipologiaGrid.setEmptyStateText("Non ci sono tipologie di veicolo registrate");
+
+        tipologiaGrid.setClassName("grid-style");
+        tipologiaGrid.addThemeVariants(
+                GridVariant.LUMO_NO_BORDER,
+                GridVariant.LUMO_ROW_STRIPES,
+                GridVariant.NO_ROW_BORDERS
+        );
+
         tipologiaGrid.setSizeFull();
 
         setSizeFull();
