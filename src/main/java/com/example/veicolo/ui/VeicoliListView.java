@@ -145,11 +145,11 @@ public class VeicoliListView extends VerticalLayout {
         veicoloGrid.addColumn(veicolo -> veicolo.getMarca().getMarca()).setHeader("Marca");
         veicoloGrid.addColumn(veicolo -> veicolo.getNomeModello().getNomeModello()).setHeader("Modello");
         veicoloGrid.addColumn(Veicolo::getTarga).setHeader("Targa");
-        veicoloGrid.addColumn(Veicolo::getDataUltimaPrenotazione).setHeader("Data inizio ultima prenotazione");
-        veicoloGrid.addColumn(Veicolo::getPrenotataPerGiorni).setHeader("Durata prenotazione");
-        veicoloGrid.addColumn(Veicolo::getFatturatoDaPrenotazione).setHeader("Guadagno da prenotazione in euro");
-        veicoloGrid.addColumn(Veicolo::getDataPrimaDisponibilita).setHeader("Prima data di disponibilita");
-        veicoloGrid.addColumn(Veicolo::getDataScadenzaAssicurazione).setHeader("Data scadenza assicurazione");
+        veicoloGrid.addColumn(Veicolo::getDataUltimaPrenotazione).setHeader("Noleggiata dal");
+        veicoloGrid.addColumn(Veicolo::getPrenotataPerGiorni).setHeader("Durata noleggio");
+        veicoloGrid.addColumn(Veicolo::getFatturatoDaPrenotazione).setHeader("Guadagno in euro");
+        veicoloGrid.addColumn(Veicolo::getDataPrimaDisponibilita).setHeader("Prima disponibilita");
+        veicoloGrid.addColumn(Veicolo::getDataScadenzaAssicurazione).setHeader("Scadenza polizza");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             boolean assicurato = Boolean.TRUE.equals(veicolo.geteAssicurato());
@@ -163,7 +163,7 @@ public class VeicoliListView extends VerticalLayout {
             }
 
             return icon;
-        }).setHeader("Assicurazione valida?");
+        }).setHeader("Polizza valida?");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             Button elimina = new Button("Elimina", click -> deleteVeicolo(veicolo.getId()));
