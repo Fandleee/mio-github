@@ -46,8 +46,10 @@ public class Veicolo {
     @Column(name = "dataScadenzaAssicurazione", nullable = false)
     private LocalDate dataScadenzaAssicurazione;
 
-    @Column(name = "eAssicurato", nullable = false)
-    private Boolean eAssicurato;
+    @Transient
+    public boolean isAssicurato() {
+        return !dataScadenzaAssicurazione.isBefore(LocalDate.now());
+    }
 
     protected Veicolo() {}
 
@@ -61,13 +63,6 @@ public class Veicolo {
         this.fatturatoDaPrenotazione = nomeModello.getCostoNoleggioGiornaliero()*this.prenotataPerGiorni;
         this.dataPrimaDisponibilita = dataUltimaPrenotazione.plusDays(prenotataPerGiorni);
         this.dataScadenzaAssicurazione = dataScadenzaAssicurazione;
-
-        if (dataScadenzaAssicurazione.isAfter(LocalDate.now()) || dataScadenzaAssicurazione.equals(LocalDate.now())) {
-            this.eAssicurato = true;
-        } else {
-            this.eAssicurato = false;
-        }
-
     }
 
     // Getters
@@ -108,7 +103,7 @@ public class Veicolo {
     }
 
     public Boolean geteAssicurato() {
-        return eAssicurato;
+        return isAssicurato();
     }
 
     // Setters
@@ -140,19 +135,15 @@ public class Veicolo {
         this.dataScadenzaAssicurazione = dataScadenzaAssicurazione;
     }
 
-    public void seteAssicurato(Boolean eAssicurato) {
-        this.eAssicurato = eAssicurato;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Veicolo veicolo = (Veicolo) o;
-        return getPrenotataPerGiorni() == veicolo.getPrenotataPerGiorni() && Objects.equals(getId(), veicolo.getId()) && Objects.equals(getMarca(), veicolo.getMarca()) && Objects.equals(getNomeModello(), veicolo.getNomeModello()) && Objects.equals(getTarga(), veicolo.getTarga()) && Objects.equals(getDataUltimaPrenotazione(), veicolo.getDataUltimaPrenotazione()) && Objects.equals(getDataPrimaDisponibilita(), veicolo.getDataPrimaDisponibilita()) && Objects.equals(getDataScadenzaAssicurazione(), veicolo.getDataScadenzaAssicurazione()) && Objects.equals(geteAssicurato(), veicolo.geteAssicurato());
+        return getPrenotataPerGiorni() == veicolo.getPrenotataPerGiorni() && Float.compare(getFatturatoDaPrenotazione(), veicolo.getFatturatoDaPrenotazione()) == 0 && Objects.equals(getId(), veicolo.getId()) && Objects.equals(getMarca(), veicolo.getMarca()) && Objects.equals(getNomeModello(), veicolo.getNomeModello()) && Objects.equals(getTarga(), veicolo.getTarga()) && Objects.equals(getDataUltimaPrenotazione(), veicolo.getDataUltimaPrenotazione()) && Objects.equals(getDataPrimaDisponibilita(), veicolo.getDataPrimaDisponibilita()) && Objects.equals(getDataScadenzaAssicurazione(), veicolo.getDataScadenzaAssicurazione());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getMarca(), getNomeModello(), getTarga(), getDataUltimaPrenotazione(), getPrenotataPerGiorni(), getDataPrimaDisponibilita(), getDataScadenzaAssicurazione(), geteAssicurato());
+        return Objects.hash(getId(), getMarca(), getNomeModello(), getTarga(), getDataUltimaPrenotazione(), getPrenotataPerGiorni(), getFatturatoDaPrenotazione(), getDataPrimaDisponibilita(), getDataScadenzaAssicurazione());
     }
 }
