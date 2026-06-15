@@ -43,7 +43,7 @@ public class Modello {
     private int numeroPasseggeri;
 
     @Column(name = "costo_noleggio_giornaliero", nullable = false)
-    private int costoNoleggioGiornaliero;
+    private float costoNoleggioGiornaliero;
 
     @Column(name = "quantita", nullable = false)
     private int quantita;
@@ -58,7 +58,7 @@ public class Modello {
             int cilindrata,
             Alimentazione alimentazione,
             int numeroPasseggeri,
-            int costoNoleggioGiornaliero,
+            float costoNoleggioGiornaliero,
             int quantita
     ) {
         setMarca(marca);
@@ -81,7 +81,7 @@ public class Modello {
     public int getCilindrata() { return this.cilindrata; }
     public Alimentazione getAlimentazione() { return this.alimentazione; }
     public int getNumeroPasseggeri() { return this.numeroPasseggeri; }
-    public int getCostoNoleggioGiornaliero() { return this.costoNoleggioGiornaliero; }
+    public float getCostoNoleggioGiornaliero() { return this.costoNoleggioGiornaliero; }
     public int getQuantita() { return this.quantita; }
 
     // Setters
@@ -92,7 +92,7 @@ public class Modello {
     public void setCilindrata(int cilindrata) { this.cilindrata = cilindrata; }
     public void setAlimentazione(Alimentazione alimentazione) { this.alimentazione = alimentazione; }
     public void setNumeroPasseggeri(int numeroPasseggeri) { this.numeroPasseggeri = numeroPasseggeri; }
-    public void setCostoNoleggioGiornaliero(int costoNoleggioGiornaliero) { this.costoNoleggioGiornaliero = costoNoleggioGiornaliero; }
+    public void setCostoNoleggioGiornaliero(float costoNoleggioGiornaliero) { this.costoNoleggioGiornaliero = costoNoleggioGiornaliero; }
     public void setQuantita(int quantita) { this.quantita = quantita; }
 
     @Override

@@ -5,6 +5,8 @@ import com.example.alimentazioni.Alimentazione;
 import com.example.modelli.Modello;
 import com.example.tipologieVeicolo.TipologiaVeicolo;
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.xml.crypto.Data;
@@ -46,30 +48,18 @@ public class Veicolo {
     @Column(name = "dataScadenzaAssicurazione", nullable = false)
     private LocalDate dataScadenzaAssicurazione;
 
-    @Transient
-    public boolean isAssicurato() {
-        return dataScadenzaAssicurazione != null && !dataScadenzaAssicurazione.isBefore(LocalDate.now());
-    }
-
     protected Veicolo() {}
 
     public Veicolo(Marca marca, Modello nomeModello, String targa, LocalDate dataUltimaPrenotazione, int prenotataPerGiorni, LocalDate dataScadenzaAssicurazione) {
 
-        this.marca = marca;
-        this.nomeModello = nomeModello;
-        this.targa = targa;
-        this.dataUltimaPrenotazione = dataUltimaPrenotazione;
-        this.prenotataPerGiorni = prenotataPerGiorni;
-        this.fatturatoDaPrenotazione = nomeModello.getCostoNoleggioGiornaliero()*this.prenotataPerGiorni;
-        this.dataPrimaDisponibilita = dataUltimaPrenotazione.plusDays(prenotataPerGiorni);
-        this.dataScadenzaAssicurazione = dataScadenzaAssicurazione;
+        aggiornaVeicolo(marca, nomeModello, targa, dataUltimaPrenotazione, prenotataPerGiorni, dataScadenzaAssicurazione);
     }
 
     // Getters
+
     public Long getId() {
         return id;
     }
-
     public Marca getMarca() {
         return marca;
     }
@@ -107,10 +97,10 @@ public class Veicolo {
     }
 
     // Setters
+
     public void setMarca(Marca marca) {
         this.marca = marca;
     }
-
     public void setNomeModello(Modello nomeModello) {
         this.nomeModello = nomeModello;
     }
@@ -134,6 +124,27 @@ public class Veicolo {
     public void setDataScadenzaAssicurazione(LocalDate dataScadenzaAssicurazione) {
         this.dataScadenzaAssicurazione = dataScadenzaAssicurazione;
     }
+
+
+    public boolean isAssicurato() {
+        return dataScadenzaAssicurazione != null && !dataScadenzaAssicurazione.isBefore(LocalDate.now());
+    }
+
+    public void calcolaFatturatoPrimaDisponibilita (Modello modello, LocalDate dataUltimaPrenotazione, int prenotataPerGiorni) {
+        this.fatturatoDaPrenotazione = modello.getCostoNoleggioGiornaliero()*prenotataPerGiorni;
+        this.dataPrimaDisponibilita = dataUltimaPrenotazione.plusDays(prenotataPerGiorni);
+    }
+
+    public void aggiornaVeicolo(Marca marca, Modello nomeModello, String targa, LocalDate dataUltimaPrenotazione, int prenotataPerGiorni, LocalDate dataScadenzaAssicurazione) {
+        setMarca(marca);
+        setNomeModello(nomeModello);
+        setTarga(targa);
+        setDataUltimaPrenotazione(dataUltimaPrenotazione);
+        setPrenotataPerGiorni(prenotataPerGiorni);
+        setDataScadenzaAssicurazione(dataScadenzaAssicurazione);
+        calcolaFatturatoPrimaDisponibilita(nomeModello, dataUltimaPrenotazione, prenotataPerGiorni);
+    }
+
 
     @Override
     public boolean equals(Object o) {

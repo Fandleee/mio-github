@@ -35,6 +35,13 @@ public class VeicoloService {
     public List<Veicolo> list(Pageable pageable) { return veicoloRepository.findAllBy(pageable).toList(); }
 
     @Transactional
+    public void updateVeicolo(Long id, Marca marca, Modello nomeModello, String targa, LocalDate dataUltimaPrenotazione, int prenotataPerGiorni, LocalDate dataScadenzaAssicurazione) {
+        var veicolo = veicoloRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Veicolo non trovato: " + targa));
+        veicolo.aggiornaVeicolo(marca, nomeModello, targa, dataUltimaPrenotazione, prenotataPerGiorni, dataScadenzaAssicurazione);
+        veicoloRepository.saveAndFlush(veicolo);
+    }
+
+    @Transactional
     public void deleteVeicolo(Long id){
         veicoloRepository.deleteById(id);
     }
