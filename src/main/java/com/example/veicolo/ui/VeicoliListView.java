@@ -118,6 +118,8 @@ public class VeicoliListView extends VerticalLayout {
         targa.setAriaLabel("Targa veicolo");
         targa.setMaxLength(Veicolo.TARGA_VEICOLO_MAX_LENGTH);
         targa.setMinWidth("15em");
+        targa.setMaxLength(7);
+        targa.setMinLength(7);
 
         // Data ultima prenotazione
         dataUltimaPrenotazione.setLabel("Data inizio ultima prenotazione");
