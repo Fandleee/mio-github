@@ -48,6 +48,7 @@ public final class MainLayout extends AppLayout {
         header.getStyle().set("background-color", "#ffffff");
         header.getStyle().set("border-radius", "20px");
         header.getStyle().set("margin-bottom", "12px");
+        header.getStyle().set("margin-top", "20px");
 
         return header;
     }
@@ -70,7 +71,7 @@ public final class MainLayout extends AppLayout {
         Scroller scroller = new Scroller(sideNav);
         scroller.addThemeVariants(ScrollerVariant.OVERFLOW_INDICATORS);
         scroller.setWidthFull();
-        scroller.setHeight("785px");
+        scroller.setHeight("770px");
 
         Component footer = createApplicationFooter();
 
