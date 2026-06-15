@@ -197,7 +197,7 @@ public class VeicoliListView extends VerticalLayout {
         )).setHeader("Scadenza polizza").setSortProperty("dataScadenzaAssicurazione");
 
         veicoloGrid.addComponentColumn(veicolo -> {
-            boolean assicurato = Boolean.TRUE.equals(veicolo.geteAssicurato());
+            boolean assicurato = veicolo.isAssicurato();
             Icon icon = VaadinIcon.CHECK.create();
 
             if (assicurato) {
@@ -208,7 +208,7 @@ public class VeicoliListView extends VerticalLayout {
             }
 
             return icon;
-        }).setHeader("Polizza valida?").setSortProperty("eAssicurato");
+        }).setHeader("Polizza valida?");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             Button elimina = new Button("Elimina", click -> deleteVeicolo(veicolo.getId()));
