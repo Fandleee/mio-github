@@ -162,24 +162,37 @@ public class VeicoliListView extends VerticalLayout {
         // Visualizzazione record
         veicoloGrid.setItems(query -> veicoloService.list(toSpringPageRequest(query)).stream());
 
-        veicoloGrid.addColumn(veicolo -> veicolo.getMarca().getMarca()).setHeader("Marca");
-        veicoloGrid.addColumn(veicolo -> veicolo.getNomeModello().getNomeModello()).setHeader("Modello");
-        veicoloGrid.addColumn(Veicolo::getTarga).setHeader("Targa");
+        veicoloGrid.addColumn(veicolo -> veicolo.getMarca().getMarca())
+                .setHeader("Marca")
+                .setSortProperty("marca.marca");
+
+        veicoloGrid.addColumn(veicolo -> veicolo.getNomeModello().getNomeModello())
+                .setHeader("Modello")
+                .setSortProperty("nomeModello.nomeModello");
+
+        veicoloGrid.addColumn(Veicolo::getTarga)
+                .setHeader("Targa")
+                .setSortProperty("targa");
 
         veicoloGrid.addColumn(new LocalDateRenderer<>(
                 Veicolo::getDataUltimaPrenotazione, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        )).setHeader("Noleggiata dal");
+        )).setHeader("Noleggiata dal").setSortProperty("dataUltimaPrenotazione");
 
-        veicoloGrid.addColumn(Veicolo::getPrenotataPerGiorni).setHeader("Durata noleggio");
-        veicoloGrid.addColumn(Veicolo::getFatturatoDaPrenotazione).setHeader("Guadagno in euro");
+        veicoloGrid.addColumn(Veicolo::getPrenotataPerGiorni)
+                .setHeader("Durata noleggio")
+                .setSortProperty("prenotataPerGiorni");
+
+        veicoloGrid.addColumn(Veicolo::getFatturatoDaPrenotazione)
+                .setHeader("Guadagno in euro")
+                .setSortProperty("fatturatoDaPrenotazione");
 
         veicoloGrid.addColumn(new LocalDateRenderer<>(
                 Veicolo::getDataPrimaDisponibilita, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        )).setHeader("Prima disponibilita");
+        )).setHeader("Prima disponibilita").setSortProperty("dataPrimaDisponibilita");
 
         veicoloGrid.addColumn(new LocalDateRenderer<>(
                 Veicolo::getDataScadenzaAssicurazione, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        )).setHeader("Scadenza polizza");
+        )).setHeader("Scadenza polizza").setSortProperty("dataScadenzaAssicurazione");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             boolean assicurato = Boolean.TRUE.equals(veicolo.geteAssicurato());
@@ -193,7 +206,7 @@ public class VeicoliListView extends VerticalLayout {
             }
 
             return icon;
-        }).setHeader("Polizza valida?");
+        }).setHeader("Polizza valida?").setSortProperty("eAssicurato");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             Button elimina = new Button("Elimina", click -> deleteVeicolo(veicolo.getId()));
