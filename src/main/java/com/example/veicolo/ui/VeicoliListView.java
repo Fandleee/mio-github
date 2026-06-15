@@ -84,6 +84,8 @@ public class VeicoliListView extends VerticalLayout {
             marcaSelect.setItems(marche);
             marcaSelect.setItemLabelGenerator(Marca::getMarca);
         }
+
+        // Al cambiare della marca, si possono scegliere modelli relativi ad essa
         marcaSelect.addValueChangeListener(event -> {
             Marca marcaScelta = event.getValue();
             modelliSelect.clear();
