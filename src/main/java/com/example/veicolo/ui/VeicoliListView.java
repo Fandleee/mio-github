@@ -23,12 +23,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.data.domain.Pageable;
 
 import javax.swing.*;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRequest;
@@ -145,11 +147,21 @@ public class VeicoliListView extends VerticalLayout {
         veicoloGrid.addColumn(veicolo -> veicolo.getMarca().getMarca()).setHeader("Marca");
         veicoloGrid.addColumn(veicolo -> veicolo.getNomeModello().getNomeModello()).setHeader("Modello");
         veicoloGrid.addColumn(Veicolo::getTarga).setHeader("Targa");
-        veicoloGrid.addColumn(Veicolo::getDataUltimaPrenotazione).setHeader("Noleggiata dal");
+
+        veicoloGrid.addColumn(new LocalDateRenderer<>(
+                Veicolo::getDataUltimaPrenotazione, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        )).setHeader("Noleggiata dal");
+
         veicoloGrid.addColumn(Veicolo::getPrenotataPerGiorni).setHeader("Durata noleggio");
         veicoloGrid.addColumn(Veicolo::getFatturatoDaPrenotazione).setHeader("Guadagno in euro");
-        veicoloGrid.addColumn(Veicolo::getDataPrimaDisponibilita).setHeader("Prima disponibilita");
-        veicoloGrid.addColumn(Veicolo::getDataScadenzaAssicurazione).setHeader("Scadenza polizza");
+
+        veicoloGrid.addColumn(new LocalDateRenderer<>(
+                Veicolo::getDataPrimaDisponibilita, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        )).setHeader("Prima disponibilita");
+
+        veicoloGrid.addColumn(new LocalDateRenderer<>(
+                Veicolo::getDataScadenzaAssicurazione, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        )).setHeader("Scadenza polizza");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             boolean assicurato = Boolean.TRUE.equals(veicolo.geteAssicurato());
