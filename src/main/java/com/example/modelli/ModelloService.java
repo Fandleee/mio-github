@@ -43,4 +43,9 @@ public class ModelloService {
     public void deleteModello(Long id){
         modelloRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public List<Modello> listByMarca(Marca marca) {
+        return modelloRepository.findByMarca(marca);
+    }
 }

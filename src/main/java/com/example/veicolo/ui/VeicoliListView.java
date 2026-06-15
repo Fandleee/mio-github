@@ -70,6 +70,9 @@ public class VeicoliListView extends VerticalLayout {
 
         formDialog = createFormDialog();
 
+        // Inizialmente disattivata la scelta dei modelli
+        modelliSelect.setEnabled(false);
+
         // Marca Select
         marcaSelect.setLabel("Marca");
         marcaSelect.setPlaceholder("Seleziona marca");
@@ -81,6 +84,19 @@ public class VeicoliListView extends VerticalLayout {
             marcaSelect.setItems(marche);
             marcaSelect.setItemLabelGenerator(Marca::getMarca);
         }
+        marcaSelect.addValueChangeListener(event -> {
+            Marca marcaScelta = event.getValue();
+            modelliSelect.clear();
+
+            if (marcaScelta.equals(null)) {
+                modelliSelect.setEnabled(false);
+                return;
+            }
+
+            List<Modello> modelli = modelloService.listByMarca(marcaScelta);
+            modelliSelect.setItems(modelli);
+            modelliSelect.setEnabled(!modelli.isEmpty());
+        });
 
         // Modello Select
         modelliSelect.setLabel("Modelli");
