@@ -63,6 +63,16 @@ html, body {
     margin-bottom: 6px;
 }
 
+.icon-green {
+    color: green;
+    margin-left: 20px;
+}
+
+.icon-red {
+    color: red;
+    margin-left: 20px;
+}
+
 
 .app-logo {
     border-radius: min(40%, var(--vaadin-radius-m));

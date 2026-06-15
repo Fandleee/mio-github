@@ -7,6 +7,7 @@ import com.example.modelli.Modello;
 import com.example.modelli.ModelloService;
 import com.example.veicolo.Veicolo;
 import com.example.veicolo.VeicoloService;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -14,6 +15,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -26,6 +28,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.data.domain.Pageable;
 
+import javax.swing.*;
 import java.util.List;
 
 import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRequest;
@@ -147,7 +150,20 @@ public class VeicoliListView extends VerticalLayout {
         veicoloGrid.addColumn(Veicolo::getFatturatoDaPrenotazione).setHeader("Guadagno da prenotazione in euro");
         veicoloGrid.addColumn(Veicolo::getDataPrimaDisponibilita).setHeader("Prima data di disponibilita");
         veicoloGrid.addColumn(Veicolo::getDataScadenzaAssicurazione).setHeader("Data scadenza assicurazione");
-        veicoloGrid.addColumn(Veicolo::geteAssicurato).setHeader("Assicurazione valida?");
+
+        veicoloGrid.addComponentColumn(veicolo -> {
+            boolean assicurato = Boolean.TRUE.equals(veicolo.geteAssicurato());
+            Icon icon = VaadinIcon.CHECK.create();
+
+            if (assicurato) {
+                icon.setClassName("icon-green");
+            } else {
+                icon = VaadinIcon.CLOSE.create();
+                icon.setClassName("icon-red");
+            }
+
+            return icon;
+        }).setHeader("Assicurazione valida?");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             Button elimina = new Button("Elimina", click -> deleteVeicolo(veicolo.getId()));
