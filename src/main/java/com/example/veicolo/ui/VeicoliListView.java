@@ -90,7 +90,7 @@ public class VeicoliListView extends VerticalLayout {
             Marca marcaScelta = event.getValue();
             modelliSelect.clear();
 
-            if (marcaScelta.equals(null)) {
+            if (marcaScelta == null) {
                 modelliSelect.setEnabled(false);
                 return;
             }

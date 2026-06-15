@@ -48,7 +48,7 @@ public class Veicolo {
 
     @Transient
     public boolean isAssicurato() {
-        return !dataScadenzaAssicurazione.isBefore(LocalDate.now());
+        return dataScadenzaAssicurazione != null && !dataScadenzaAssicurazione.isBefore(LocalDate.now());
     }
 
     protected Veicolo() {}
