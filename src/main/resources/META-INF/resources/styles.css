@@ -2,18 +2,10 @@
 :root {
     --nice-blue: #0075e1;
     --main-color: #89a2c5;
-    /*--standard-box-shadow: 0 0 5px rgb(0 0 0 / 0.17);*/
 }
 
 vaadin-grid::part(header-cell) {
     font-weight: 600;
-}
-
-vaadin-grid::part(cell) {
-    padding: 5px;
-}
-
-vaadin-grid::part(header-cell) {
     border-radius: 25px;
 }
 
@@ -26,7 +18,6 @@ html, body {
 }
 
 .outer-wrapper-shadow {
-    /*box-shadow: var(--standard-box-shadow);*/
     border-radius: 35px;
     background-color: white;
 }
@@ -40,25 +31,19 @@ html, body {
 }
 
 .form-btn {
-    /*box-shadow: var(--standard-box-shadow);*/
-
     border-end-end-radius: 35px;
     border-start-end-radius: 35px;
     border-start-start-radius: 0;
     border-end-start-radius: 0;
-
     background-color: var(--nice-blue);
     color: white;
-
     font-weight: bolder;
     font-size: 2rem;
-
     padding-left: 10px;
     padding-bottom: 5px;
 }
 
-.grid-style  {
-    /*box-shadow: var(--standard-box-shadow);*/
+.grid-style {
     border-radius: 25px;
     margin-bottom: 6px;
 }
@@ -72,7 +57,6 @@ html, body {
     color: red;
     margin-left: 20px;
 }
-
 
 .app-logo {
     border-radius: min(40%, var(--vaadin-radius-m));
@@ -96,23 +80,8 @@ vaadin-app-layout::part(drawer) {
 
 vaadin-side-nav-item::part(link) {
     font-weight: 600;
-}
-
-vaadin-side-nav-item::part(link):hover {
-    --lumo-primary-color: transparent;
-    background-color: #ffffff;
-    color: #ffffff;
-}
-
-.nav-label {
-    display: inline-block;
-    transition: transform 0.2s ease;
-    transform-origin: left center;
-}
-
-vaadin-side-nav-item::part(link) {
-   padding-top: 20px;
-   padding-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 vaadin-side-nav-item::part(link):hover {
@@ -124,7 +93,125 @@ vaadin-side-nav-item[active]::part(item) {
     background-color: var(--main-color);
 }
 
+.nav-label {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    transform-origin: left center;
+}
 
 vaadin-side-nav-item:hover .nav-label {
     transform: scale(1.1);
+}
+
+/* ─── BOTTOM RIGHT NOTE ─────────────────────────────────── */
+
+.bottom-right-note {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    font-weight: 700;
+    color: #4b4b4b;
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
+}
+
+/* ─── DRAWER CONTAINER & COLLAPSE BUTTON ────────────────── */
+
+.drawer-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.drawer-collapse-button {
+    position: absolute;
+    top: 50%;
+    right: -18px;
+    transform: translateY(-50%);
+    z-index: 1001;
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #d9d9d9;
+    background: white;
+    color: #4b4b4b;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.drawer-collapse-button:hover {
+    background: var(--nice-blue);
+    color: white;
+    border-color: var(--nice-blue);
+}
+
+/* ─── TRANSIZIONI FLUIDE ─────────────────────────────────── */
+
+.drawer-header,
+.drawer-box,
+.drawer-footer {
+    transition: width 0.25s ease, padding 0.25s ease, margin 0.25s ease;
+}
+
+/* ─── STATO COLLAPSED ────────────────────────────────────── */
+
+vaadin-app-layout.drawer-collapsed {
+    --vaadin-app-layout-drawer-width: 110px;
+}
+
+/* header: diventa un cerchio con solo avatar */
+vaadin-app-layout.drawer-collapsed .drawer-header {
+    width: 72px !important;
+    margin-left: 8px !important;
+    padding: 8px !important;
+    justify-content: center;
+    border-radius: 999px;
+}
+
+vaadin-app-layout.drawer-collapsed .drawer-header-name {
+    display: none;
+}
+
+vaadin-app-layout.drawer-collapsed .drawer-avatar {
+    margin-left: 0 !important;
+}
+
+/* drawer box: si restringe */
+vaadin-app-layout.drawer-collapsed .drawer-box {
+    width: 72px !important;
+}
+
+/* nav: nasconde label e centra icone */
+vaadin-app-layout.drawer-collapsed .nav-label {
+    display: none;
+}
+
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item::part(link) {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item::part(content) {
+    justify-content: center;
+}
+
+/* footer: nasconde testo e centra logo */
+vaadin-app-layout.drawer-collapsed .drawer-footer {
+    justify-content: center;
+    gap: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+vaadin-app-layout.drawer-collapsed .drawer-footer-text {
+    display: none;
+}
+
+vaadin-app-layout.drawer-collapsed .drawer-footer-logo {
+    margin: 0 auto;
+    width: 40px;
 }

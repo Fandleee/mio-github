@@ -24,7 +24,7 @@ import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRe
 
 @Route(value = "alimentazioni")
 @PageTitle("Alimentazioni")
-@Menu(order = 2, icon = "", title = "Alimentazioni")
+@Menu(order = 3, icon = "icons/alimentazioni.svg", title = "Alimentazioni")
 
 class AlimentazioniListView extends VerticalLayout {
 

@@ -7,6 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 
+/*La pagina Application.java permette di collegare la struttura di codice java
+* e le view tramite @route. Vaadin Flow tiene sincronizzati oggetti Java lato
+* server con elementi HTML lato client. Ultimamente il debug avviene
+*  puntando alla classe main() che avvia Spring Boot*/
+
+
 @SpringBootApplication
 @StyleSheet(Lumo.STYLESHEET)
 @StyleSheet(Lumo.UTILITY_STYLESHEET)

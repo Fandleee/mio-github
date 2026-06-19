@@ -33,7 +33,7 @@ import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRe
 
 @Route(value = "modelli")
 @PageTitle("Modelli")
-@Menu(order = 1, icon = "", title = "Modelli")
+@Menu(order = 4, icon = "icons/modelli.svg", title = "Modelli")
 
 public class ModelliListView extends VerticalLayout {
 
@@ -291,26 +291,44 @@ public class ModelliListView extends VerticalLayout {
     private Dialog createFormDialog() {
 
         var dialog = new Dialog();
-
         dialog.setHeaderTitle("Aggiungi modello");
-        dialog.setMaxWidth("700px");
 
-        var form = new FormLayout(marcaSelect, nomeModello, tipologiaVeicoloSelect, numeroCilindri, alimentazioneSelect, cilindrata, numeroPasseggeri, costoGiornaliero, quantita);
-        form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 6));
-        form.setColspan(marcaSelect ,3);
-        form.setColspan(nomeModello ,3);
-        form.setColspan(tipologiaVeicoloSelect ,3);
-        form.setColspan(numeroCilindri ,3);
-        form.setColspan(alimentazioneSelect ,3);
-        form.setColspan(cilindrata ,3);
-        form.setColspan(numeroPasseggeri ,2);
-        form.setColspan(costoGiornaliero ,2);
-        form.setColspan(quantita ,2);
+        // Mobile quasi pieno, desktop più compatto
+        dialog.setWidth("95vw");
+        dialog.setMaxWidth("900px");
+
+        marcaSelect.setWidthFull();
+        nomeModello.setWidthFull();
+        tipologiaVeicoloSelect.setWidthFull();
+        numeroCilindri.setWidthFull();
+        alimentazioneSelect.setWidthFull();
+        cilindrata.setWidthFull();
+        numeroPasseggeri.setWidthFull();
+        costoGiornaliero.setWidthFull();
+        quantita.setWidthFull();
+
+        var form = new FormLayout();
+        form.setWidthFull();
+        form.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
+                new FormLayout.ResponsiveStep("700px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP)
+        );
+
+        form.add(
+                marcaSelect,
+                nomeModello,
+                tipologiaVeicoloSelect,
+                numeroCilindri,
+                alimentazioneSelect,
+                cilindrata,
+                numeroPasseggeri,
+                costoGiornaliero,
+                quantita
+        );
 
         dialog.add(form);
 
         var annullaBtn = new Button("Annulla", e -> dialog.close());
-
         dialog.getFooter().add(annullaBtn, createBtn);
 
         return dialog;

@@ -36,12 +36,10 @@ import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRe
 
 @Route(value = "")
 @PageTitle("Veicoli")
-@Menu(order = 0, icon = "", title = "Veicoli")
-
+@Menu(order = 5, icon = "icons/car.svg", title = "Veicoli")
 public class VeicoliListView extends VerticalLayout {
 
     private final VeicoloService veicoloService;
-
     private Veicolo veicoloInModifica;
 
     final Select<Marca> marcaSelect;
@@ -56,8 +54,7 @@ public class VeicoliListView extends VerticalLayout {
     Button updateBtn;
     final Grid<Veicolo> veicoloGrid;
 
-    VeicoliListView(ModelloService modelloService, VeicoloService veicoloService, MarcaService marcaService){
-
+    VeicoliListView(ModelloService modelloService, VeicoloService veicoloService, MarcaService marcaService) {
         this.veicoloService = veicoloService;
 
         marcaSelect = new Select<>();
@@ -72,7 +69,6 @@ public class VeicoliListView extends VerticalLayout {
 
         formDialog = createFormDialog();
 
-        // Inizialmente disattivata la scelta dei modelli
         modelliSelect.setEnabled(false);
 
         // Marca Select
@@ -87,7 +83,6 @@ public class VeicoliListView extends VerticalLayout {
             marcaSelect.setItemLabelGenerator(Marca::getMarca);
         }
 
-        // Al cambiare della marca, si possono scegliere modelli relativi ad essa
         marcaSelect.addValueChangeListener(event -> {
             Marca marcaScelta = event.getValue();
             modelliSelect.clear();
@@ -104,7 +99,7 @@ public class VeicoliListView extends VerticalLayout {
 
         // Modello Select
         modelliSelect.setLabel("Modelli");
-        modelliSelect.setPlaceholder("Seleziona marca");
+        modelliSelect.setPlaceholder("Seleziona modello");
         List<Modello> modello = modelloService.list(Pageable.unpaged());
         if (modello.isEmpty()) {
             modelliSelect.setEnabled(false);
@@ -119,29 +114,25 @@ public class VeicoliListView extends VerticalLayout {
         targa.setLabel("Targa veicolo");
         targa.setAriaLabel("Targa veicolo");
         targa.setMaxLength(Veicolo.TARGA_VEICOLO_MAX_LENGTH);
-        targa.setMinWidth("15em");
-        targa.setMaxLength(7);
         targa.setMinLength(7);
+        targa.setWidth("12ch");
 
         // Data ultima prenotazione
         dataUltimaPrenotazione.setLabel("Data inizio ultima prenotazione");
         dataUltimaPrenotazione.setAriaLabel("Data inizio ultima prenotazione");
-        dataUltimaPrenotazione.setMinWidth("15em");
 
-        // Giorni di penotazione
+        // Giorni di prenotazione
         prenotataPerGiorni.setLabel("Durata prenotazione");
         prenotataPerGiorni.setAriaLabel("Durata prenotazione");
-        prenotataPerGiorni.setMinWidth("15em");
+        prenotataPerGiorni.setWidth("10ch");
 
         // Scadenza assicurazione
         dataScadenzaAssicurazione.setLabel("Data scadenza assicurazione");
         dataScadenzaAssicurazione.setAriaLabel("Data scadenza assicurazione");
-        dataScadenzaAssicurazione.setMinWidth("15em");
 
         // Button
         createBtn.setText("Aggiungi");
         createBtn.addThemeVariants(ButtonVariant.PRIMARY);
-
 
         var openDialogBtn = new Button("+", event -> openCreateDialog());
         openDialogBtn.setClassName("form-btn");
@@ -226,7 +217,7 @@ public class VeicoliListView extends VerticalLayout {
                 GridVariant.LUMO_NO_BORDER,
                 GridVariant.LUMO_ROW_STRIPES,
                 GridVariant.NO_ROW_BORDERS
-                );
+        );
 
         veicoloGrid.setSizeFull();
 
@@ -271,7 +262,6 @@ public class VeicoliListView extends VerticalLayout {
     }
 
     private void createVeicolo() {
-
         if (!isFormValid()) return;
 
         String targaValore = targa.getValue();
@@ -286,20 +276,14 @@ public class VeicoliListView extends VerticalLayout {
         );
 
         veicoloGrid.getDataProvider().refreshAll();
-
-        marcaSelect.setValue(null);
-        modelliSelect.setValue(null);
-        targa.clear();
-        dataUltimaPrenotazione.setValue(null);
-        prenotataPerGiorni.setValue(null);
-        dataScadenzaAssicurazione.setValue(null);
-
+        clearForm();
         formDialog.close();
-        Notification.show(targaValore + " aggiunto!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+        Notification.show(targaValore + " aggiunto!", 3000, Notification.Position.BOTTOM_END)
+                .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
     }
 
     private void updateVeicolo(Long id) {
-
         if (!isFormValid()) return;
 
         String targaValore = targa.getValue();
@@ -315,33 +299,33 @@ public class VeicoliListView extends VerticalLayout {
         );
 
         veicoloGrid.getDataProvider().refreshAll();
+        clearForm();
+        formDialog.close();
+
+        Notification.show(targaValore + " modificato!", 3000, Notification.Position.BOTTOM_END)
+                .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+    }
+
+    private void deleteVeicolo(Long id) {
+        veicoloService.deleteVeicolo(id);
+        veicoloGrid.getDataProvider().refreshAll();
+
+        Notification.show("Veicolo eliminato!", 3000, Notification.Position.BOTTOM_END)
+                .addThemeVariants(NotificationVariant.WARNING);
+    }
+
+    private void clearForm() {
         marcaSelect.setValue(null);
         modelliSelect.setValue(null);
         targa.clear();
         dataUltimaPrenotazione.setValue(null);
         prenotataPerGiorni.setValue(null);
         dataScadenzaAssicurazione.setValue(null);
-
-        formDialog.close();
-        Notification.show(targaValore + " modificato!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-    }
-
-    private void deleteVeicolo(Long id){
-        veicoloService.deleteVeicolo(id);
-        veicoloGrid.getDataProvider().refreshAll();
-        Notification.show("Veicolo eliminato!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
     }
 
     private void openCreateDialog() {
         veicoloInModifica = null;
-
-        updateBtn.setVisible(false);
-
-        marcaSelect.setValue(null);
-        targa.clear();
-        dataUltimaPrenotazione.setValue(null);
-        prenotataPerGiorni.setValue(null);
-        dataScadenzaAssicurazione.setValue(null);
+        clearForm();
 
         formDialog.setHeaderTitle("Aggiungi veicolo");
         createBtn.setVisible(true);
@@ -366,19 +350,35 @@ public class VeicoliListView extends VerticalLayout {
     }
 
     private Dialog createFormDialog() {
-
         var dialog = new Dialog();
 
-        dialog.setMaxWidth("700px");
+        // Più compatto su desktop, quasi pieno su mobile
+        dialog.setWidth("95vw");
+        dialog.setMaxWidth("820px");
 
-        var form = new FormLayout(marcaSelect, modelliSelect, targa, dataUltimaPrenotazione, prenotataPerGiorni, dataScadenzaAssicurazione);
-        form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 6));
-        form.setColspan(marcaSelect ,3);
-        form.setColspan(modelliSelect ,3);
-        form.setColspan(targa ,3);
-        form.setColspan(dataUltimaPrenotazione ,3);
-        form.setColspan(prenotataPerGiorni ,3);
-        form.setColspan(dataScadenzaAssicurazione ,3);
+        marcaSelect.setWidthFull();
+        modelliSelect.setWidthFull();
+        targa.setWidthFull();
+        dataUltimaPrenotazione.setWidthFull();
+        prenotataPerGiorni.setWidthFull();
+        dataScadenzaAssicurazione.setWidthFull();
+
+        var form = new FormLayout();
+        form.setWidthFull();
+
+        form.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
+                new FormLayout.ResponsiveStep("700px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP)
+        );
+
+        form.add(
+                marcaSelect,
+                modelliSelect,
+                targa,
+                dataUltimaPrenotazione,
+                prenotataPerGiorni,
+                dataScadenzaAssicurazione
+        );
 
         dialog.add(form);
 
