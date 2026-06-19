@@ -2,6 +2,7 @@ package com.example.base.ui;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
@@ -11,7 +12,11 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
-import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.orderedlayout.ScrollerVariant;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Layout;
@@ -21,38 +26,56 @@ import com.vaadin.flow.server.menu.MenuEntry;
 @Layout
 public final class MainLayout extends AppLayout {
 
+    private static final String EXPANDED_WIDTH = "240px";
+    private static final String COLLAPSED_WIDTH = "88px";
+
     private boolean collapsed = false;
+
+    private HorizontalLayout headerBox;
     private VerticalLayout drawerBox;
+    private VerticalLayout footerBox;
     private Button collapseButton;
+
+    private Div lightOption;
+    private Div darkOption;
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
+        addClassName("app-shell");
         getElement().getStyle().set("height", "100%");
-        addToDrawer(createApplicationHeader(), createApplicationDrawerContainer());
+        addToDrawer(createDrawerContent());
+        syncThemeToggle();
     }
 
     @Override
     public void setContent(Component content) {
-        Div note = new Div();
-        note.setText("©J-Software");
+        Div note = new Div("©J-Software");
         note.addClassName("bottom-right-note");
         content.getElement().appendChild(note.getElement());
         super.setContent(content);
     }
 
-    private Component createApplicationHeader() {
+    private Component createDrawerContent() {
+        headerBox = createApplicationHeader();
+        Component drawerContainer = createApplicationDrawerContainer();
+
+        VerticalLayout root = new VerticalLayout(headerBox, drawerContainer);
+        root.addClassName("drawer-root");
+        root.setPadding(false);
+        root.setSpacing(false);
+        root.setMargin(false);
+        root.setAlignItems(FlexComponent.Alignment.CENTER);
+        root.setWidthFull();
+
+        return root;
+    }
+
+    private HorizontalLayout createApplicationHeader() {
         Avatar avatar = new Avatar("Alessio");
         avatar.addClassName("drawer-avatar");
-        avatar.getStyle().set("margin-left", "10px");
-        avatar.getStyle().set("background-color", "#71BC68");
-        avatar.getStyle().set("--vaadin-avatar-text-color", "#000000");
 
         Span nome = new Span("Alessio");
         nome.addClassName("drawer-header-name");
-        nome.getStyle().set("font-size", "18px");
-        nome.getStyle().set("font-weight", "600");
-        nome.getStyle().set("color", "black");
-        nome.getStyle().set("margin", "0");
 
         ContextMenu userMenu = new ContextMenu();
         userMenu.setTarget(avatar);
@@ -64,48 +87,29 @@ public final class MainLayout extends AppLayout {
         header.setMargin(false);
         header.setSpacing(true);
         header.setAlignItems(FlexComponent.Alignment.CENTER);
-        header.setWidth("220px");
-        header.getStyle().set("margin-left", "18px");
-        header.getStyle().set("padding", "10px");
-        header.getStyle().set("background-color", "#ffffff");
-        header.getStyle().set("border-radius", "20px");
-        header.getStyle().set("margin-bottom", "12px");
-        header.getStyle().set("margin-top", "20px");
+        header.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+        header.setWidth(EXPANDED_WIDTH);
 
         return header;
     }
 
     private Component createApplicationDrawerContainer() {
-        VerticalLayout wrapper = new VerticalLayout(createApplicationDrawer());
-        wrapper.setPadding(false);
-        wrapper.setMargin(false);
-        wrapper.setSpacing(false);
-        wrapper.setSizeFull();
-        wrapper.setAlignItems(FlexComponent.Alignment.CENTER);
-        wrapper.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
-        return wrapper;
-    }
-
-    private Component createApplicationDrawer() {
         SideNav sideNav = createSideNav();
 
         Scroller scroller = new Scroller(sideNav);
         scroller.addThemeVariants(ScrollerVariant.OVERFLOW_INDICATORS);
         scroller.setWidthFull();
-        scroller.setHeight("770px");
+        scroller.setHeight("760px");
 
-        Component footer = createApplicationFooter();
+        footerBox = createApplicationFooter();
 
-        drawerBox = new VerticalLayout(scroller, footer);
+        drawerBox = new VerticalLayout(scroller, footerBox);
         drawerBox.addClassName("drawer-box");
         drawerBox.setPadding(false);
         drawerBox.setSpacing(false);
         drawerBox.setMargin(false);
-        drawerBox.setWidth("220px");
         drawerBox.setAlignItems(FlexComponent.Alignment.STRETCH);
-        drawerBox.getStyle().set("background-color", "#ffffff");
-        drawerBox.getStyle().set("border-radius", "10px");
-        drawerBox.getStyle().set("overflow", "hidden");
+        drawerBox.setWidth(EXPANDED_WIDTH);
 
         collapseButton = new Button("❮");
         collapseButton.addClassName("drawer-collapse-button");
@@ -117,52 +121,96 @@ public final class MainLayout extends AppLayout {
         return container;
     }
 
-    private void toggleDrawer() {
-        collapsed = !collapsed;
-        if (collapsed) {
-            addClassName("drawer-collapsed");
-            collapseButton.setText("❯");
-        } else {
-            removeClassName("drawer-collapsed");
-            collapseButton.setText("❮");
-        }
-    }
+    private VerticalLayout createApplicationFooter() {
+        Component themeToggle = createThemeToggle();
 
-    private Component createApplicationFooter() {
         Image logo = new Image("icons/jsoft.png", "Logo");
         logo.addClassName("drawer-footer-logo");
-        logo.setWidth("60px");
-        logo.getStyle().set("margin", "0");
+        logo.setWidth("56px");
 
-        Span testo = new Span("CARS");
-        testo.addClassName("drawer-footer-text");
-        testo.getStyle().set("font-size", "28px");
-        testo.getStyle().set("font-weight", "600");
-        testo.getStyle().set("color", "#000000");
-        testo.getStyle().set("margin", "0");
-        testo.getStyle().set("line-height", "1");
+        Span text = new Span("CARS");
+        text.addClassName("drawer-footer-text");
 
-        HorizontalLayout footer = new HorizontalLayout(logo, testo);
+        HorizontalLayout brandRow = new HorizontalLayout(logo, text);
+        brandRow.addClassName("drawer-footer-brand-row");
+        brandRow.setPadding(false);
+        brandRow.setSpacing(false);
+        brandRow.setMargin(false);
+        brandRow.setWidthFull();
+        brandRow.setAlignItems(FlexComponent.Alignment.CENTER);
+        brandRow.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+
+        VerticalLayout footer = new VerticalLayout(themeToggle, brandRow);
         footer.addClassName("drawer-footer");
         footer.setPadding(false);
         footer.setSpacing(false);
         footer.setMargin(false);
-        footer.setWidthFull();
+        footer.setWidth(EXPANDED_WIDTH);
         footer.setAlignItems(FlexComponent.Alignment.CENTER);
         footer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        footer.getStyle().set("gap", "6px");
-        footer.getStyle().set("background-color", "#ffffff");
-        footer.getStyle().set("padding-top", "8px");
-        footer.getStyle().set("padding-bottom", "8px");
 
         return footer;
+    }
+
+    private Component createThemeToggle() {
+        Image sunIcon = new Image("icons/sun-2.svg", "Light mode");
+        sunIcon.addClassName("theme-icon");
+
+        Image moonIcon = new Image("icons/moon.svg", "Dark mode");
+        moonIcon.addClassName("theme-icon");
+
+        lightOption = new Div(sunIcon);
+        lightOption.addClassName("theme-option");
+        lightOption.addClickListener(event -> setDarkMode(false));
+
+        darkOption = new Div(moonIcon);
+        darkOption.addClassName("theme-option");
+        darkOption.addClickListener(event -> setDarkMode(true));
+
+        Div toggle = new Div(lightOption, darkOption);
+        toggle.addClassName("theme-toggle");
+
+        return toggle;
+    }
+
+    private void setDarkMode(boolean dark) {
+        if (UI.getCurrent() == null) {
+            return;
+        }
+
+        if (dark) {
+            UI.getCurrent().getElement().getThemeList().add("dark");
+        } else {
+            UI.getCurrent().getElement().getThemeList().remove("dark");
+        }
+
+        syncThemeToggle();
+    }
+
+    private void syncThemeToggle() {
+        if (UI.getCurrent() == null || lightOption == null || darkOption == null) {
+            return;
+        }
+
+        boolean darkActive = UI.getCurrent().getElement().getThemeList().contains("dark");
+
+        if (darkActive) {
+            darkOption.addClassName("theme-option-active");
+            lightOption.removeClassName("theme-option-active");
+        } else {
+            lightOption.addClassName("theme-option-active");
+            darkOption.removeClassName("theme-option-active");
+        }
     }
 
     private SideNav createSideNav() {
         SideNav nav = new SideNav();
         nav.setMinWidth(100, Unit.PIXELS);
+        nav.addClassName("app-side-nav");
+
         MenuConfiguration.getMenuEntries()
                 .forEach(entry -> nav.addItem(createSideNavItem(entry)));
+
         return nav;
     }
 
@@ -185,5 +233,25 @@ public final class MainLayout extends AppLayout {
         item.getElement().appendChild(label.getElement());
 
         return item;
+    }
+
+    private void toggleDrawer() {
+        collapsed = !collapsed;
+
+        if (collapsed) {
+            addClassName("drawer-collapsed");
+            collapseButton.setText("❯");
+            headerBox.setWidth(COLLAPSED_WIDTH);
+            headerBox.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+            drawerBox.setWidth(COLLAPSED_WIDTH);
+            footerBox.setWidth(COLLAPSED_WIDTH);
+        } else {
+            removeClassName("drawer-collapsed");
+            collapseButton.setText("❮");
+            headerBox.setWidth(EXPANDED_WIDTH);
+            headerBox.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+            drawerBox.setWidth(EXPANDED_WIDTH);
+            footerBox.setWidth(EXPANDED_WIDTH);
+        }
     }
 }
