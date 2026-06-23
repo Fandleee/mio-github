@@ -66,6 +66,10 @@ public final class MainLayout extends AppLayout {
         root.setMargin(false);
         root.setAlignItems(FlexComponent.Alignment.CENTER);
         root.setWidthFull();
+        root.setHeightFull();
+
+        root.setFlexGrow(0, headerBox);
+        root.setFlexGrow(1, drawerContainer);
 
         return root;
     }
@@ -99,17 +103,22 @@ public final class MainLayout extends AppLayout {
         Scroller scroller = new Scroller(sideNav);
         scroller.addThemeVariants(ScrollerVariant.OVERFLOW_INDICATORS);
         scroller.setWidthFull();
-        scroller.setHeight("760px");
+        scroller.setHeightFull();
 
         footerBox = createApplicationFooter();
 
-        drawerBox = new VerticalLayout(scroller, footerBox);
+        drawerBox = new VerticalLayout();
         drawerBox.addClassName("drawer-box");
         drawerBox.setPadding(false);
         drawerBox.setSpacing(false);
         drawerBox.setMargin(false);
         drawerBox.setAlignItems(FlexComponent.Alignment.STRETCH);
         drawerBox.setWidth(EXPANDED_WIDTH);
+        drawerBox.setHeightFull();
+
+        drawerBox.add(scroller, footerBox);
+        drawerBox.setFlexGrow(1, scroller);
+        drawerBox.setFlexGrow(0, footerBox);
 
         collapseButton = new Button("❮");
         collapseButton.addClassName("drawer-collapse-button");
@@ -117,6 +126,7 @@ public final class MainLayout extends AppLayout {
 
         Div container = new Div(drawerBox, collapseButton);
         container.addClassName("drawer-container");
+        container.setHeightFull();
 
         return container;
     }
@@ -173,28 +183,30 @@ public final class MainLayout extends AppLayout {
         return toggle;
     }
 
+    private boolean isDarkMode = false;  // ← metti come campo della classe in cima, con gli altri campi
+
     private void setDarkMode(boolean dark) {
-        if (UI.getCurrent() == null) {
-            return;
-        }
+        if (UI.getCurrent() == null) return;
+
+        isDarkMode = dark;
 
         if (dark) {
-            UI.getCurrent().getElement().getThemeList().add("dark");
+            UI.getCurrent().getPage().executeJs(
+                    "document.documentElement.setAttribute('theme', 'dark')"
+            );
         } else {
-            UI.getCurrent().getElement().getThemeList().remove("dark");
+            UI.getCurrent().getPage().executeJs(
+                    "document.documentElement.removeAttribute('theme')"
+            );
         }
 
         syncThemeToggle();
     }
 
     private void syncThemeToggle() {
-        if (UI.getCurrent() == null || lightOption == null || darkOption == null) {
-            return;
-        }
+        if (lightOption == null || darkOption == null) return;
 
-        boolean darkActive = UI.getCurrent().getElement().getThemeList().contains("dark");
-
-        if (darkActive) {
+        if (isDarkMode) {
             darkOption.addClassName("theme-option-active");
             lightOption.removeClassName("theme-option-active");
         } else {
@@ -205,9 +217,9 @@ public final class MainLayout extends AppLayout {
 
     private SideNav createSideNav() {
         SideNav nav = new SideNav();
-        nav.setMinWidth(100, Unit.PIXELS);
+        nav.setMinWidth(80, Unit.PIXELS);
         nav.addClassName("app-side-nav");
-
+        
         MenuConfiguration.getMenuEntries()
                 .forEach(entry -> nav.addItem(createSideNavItem(entry)));
 

@@ -1,68 +1,98 @@
+/* ==========================================================
+   VARIABLES
+   ========================================================== */
+
 :root {
-    --app-accent: #0b74de;
-    --app-accent-hover: #095fba;
-    --app-shell-bg: #8fa7ca;
+    --app-accent:               #0b74de;
+    --app-accent-hover:         #095fba;
+    --app-shell-bg:             #8fa7ca;
 
-    --drawer-width-expanded: 240px;
-    --drawer-width-collapsed: 88px;
+    --drawer-width-expanded:    240px;
+    --drawer-width-collapsed:   88px;
 
-    --custom-surface: #ffffff;
-    --custom-surface-2: #f6f8fc;
-    --custom-border: rgba(27, 43, 65, 0.12);
-    --custom-shadow: 0 10px 30px rgba(24, 39, 75, 0.10);
-    --custom-text: #1d2733;
-    --custom-text-soft: #5e6a78;
+    --custom-surface:           #ffffff;
+    --custom-surface-2:         #f6f8fc;
+    --custom-border:            rgba(27, 43, 65, 0.12);
+    --custom-shadow:            0 10px 30px rgba(24, 39, 75, 0.10);
+    --custom-text:              #1d2733;
+    --custom-text-soft:         #5e6a78;
 }
 
-/* ---------- Lumo light ---------- */
+/* ==========================================================
+   LUMO — LIGHT
+   ========================================================== */
 
 html {
-    --lumo-primary-color: var(--app-accent);
-    --lumo-primary-text-color: #0a66c2;
-    --lumo-success-color: #1f9d55;
-    --lumo-error-color: #d64545;
-    --lumo-warning-color: #d98e04;
+    --lumo-primary-color:        var(--app-accent);
+    --lumo-primary-text-color:   #0a66c2;
+    --lumo-success-color:        #1f9d55;
+    --lumo-error-color:          #d64545;
+    --lumo-warning-color:        #d98e04;
 
-    --lumo-base-color: #f4f7fb;
-    --lumo-body-text-color: #1d2733;
+    --lumo-base-color:           #f4f7fb;
+    --lumo-body-text-color:      #1d2733;
     --lumo-secondary-text-color: #667284;
-    --lumo-tertiary-text-color: #8c97a6;
-    --lumo-contrast-10pct: rgba(20, 35, 58, 0.08);
-    --lumo-contrast-20pct: rgba(20, 35, 58, 0.16);
-    --lumo-contrast-30pct: rgba(20, 35, 58, 0.26);
-    --lumo-border-radius-l: 20px;
-    --lumo-border-radius-m: 14px;
-    --lumo-border-radius-s: 10px;
+    --lumo-tertiary-text-color:  #8c97a6;
+    --lumo-contrast-10pct:       rgba(20, 35, 58, 0.08);
+    --lumo-contrast-20pct:       rgba(20, 35, 58, 0.16);
+    --lumo-contrast-30pct:       rgba(20, 35, 58, 0.26);
+
+    --lumo-border-radius-l:      20px;
+    --lumo-border-radius-m:      14px;
+    --lumo-border-radius-s:      10px;
 }
 
-/* ---------- Lumo dark ---------- */
+/* ==========================================================
+   LUMO — DARK
+   ========================================================== */
 
 html[theme~="dark"] {
-    --app-shell-bg: #0f1724;
+    --app-shell-bg:              #0f1724;
 
-    --custom-surface: #172130;
-    --custom-surface-2: #1d2939;
-    --custom-border: rgba(255, 255, 255, 0.10);
-    --custom-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-    --custom-text: #f3f7ff;
-    --custom-text-soft: #b8c3d6;
+    --custom-surface:            #263439;
+    --custom-surface-2:          #1d2939;
+    --custom-border:             rgba(255, 255, 255, 0.10);
+    --custom-shadow:             0 10px 30px rgba(0, 0, 0, 0.35);
+    --custom-text:               #f3f7ff;
+    --custom-text-soft:          #b8c3d6;
 
-    --lumo-primary-color: #5aa9ff;
-    --lumo-primary-text-color: #8fc5ff;
-    --lumo-success-color: #4fc37a;
-    --lumo-error-color: #ff7b7b;
-    --lumo-warning-color: #f2b84b;
+    --lumo-primary-color:        #5aa9ff;
+    --lumo-primary-text-color:   #8fc5ff;
+    --lumo-success-color:        #4fc37a;
+    --lumo-error-color:          #ff7b7b;
+    --lumo-warning-color:        #f2b84b;
 
-    --lumo-base-color: #111827;
-    --lumo-body-text-color: #f3f7ff;
+    --lumo-base-color:           #111827;
+    --lumo-body-text-color:      #f3f7ff;
     --lumo-secondary-text-color: #c4cede;
-    --lumo-tertiary-text-color: #97a5ba;
-    --lumo-contrast-10pct: rgba(255, 255, 255, 0.08);
-    --lumo-contrast-20pct: rgba(255, 255, 255, 0.14);
-    --lumo-contrast-30pct: rgba(255, 255, 255, 0.22);
+    --lumo-tertiary-text-color:  #97a5ba;
+    --lumo-contrast-10pct:       rgba(255, 255, 255, 0.08);
+    --lumo-contrast-20pct:       rgba(255, 255, 255, 0.14);
+    --lumo-contrast-30pct:       rgba(255, 255, 255, 0.22);
 }
 
-/* ---------- Base ---------- */
+/* ==========================================================
+   DARK MODE — COMPONENT OVERRIDES
+   ========================================================== */
+
+html[theme~="dark"] vaadin-app-layout::part(content) {
+    background: var(--app-shell-bg);
+}
+
+html[theme~="dark"] .grid-style,
+html[theme~="dark"] .outer-wrapper-shadow {
+    background:   var(--custom-surface);
+    border-color: var(--custom-border);
+}
+
+html[theme~="dark"] vaadin-dialog-overlay::part(overlay) {
+    background: var(--custom-surface);
+    color:      var(--custom-text);
+}
+
+/* ==========================================================
+   BASE
+   ========================================================== */
 
 html,
 body {
@@ -73,10 +103,12 @@ body {
     color: var(--lumo-body-text-color);
 }
 
-/* ---------- AppLayout ---------- */
+/* ==========================================================
+   APP LAYOUT
+   ========================================================== */
 
 vaadin-app-layout {
-    --vaadin-app-layout-drawer-width: 300px;
+    --vaadin-app-layout-drawer-width:      300px;
     --vaadin-app-layout-drawer-background: transparent;
 }
 
@@ -86,131 +118,157 @@ vaadin-app-layout.drawer-collapsed {
 
 vaadin-app-layout::part(drawer) {
     background: var(--app-shell-bg);
-    border: none;
-    padding: 0;
+    border:     none;
+    padding:    0;
 }
+
+/* ==========================================================
+   DRAWER ROOT
+   ========================================================== */
 
 .drawer-root {
     padding: 20px 12px 12px;
-    gap: 0;
+    gap:     0;
 }
 
-/* ---------- Header ---------- */
+/* ==========================================================
+   DRAWER HEADER
+   ========================================================== */
 
 .drawer-header {
-    width: var(--drawer-width-expanded);
-    min-height: 62px;
-    padding: 10px 14px;
+    width:         var(--drawer-width-expanded);
+    min-height:    66px;
+    padding:       10px 14px;
     margin-bottom: 14px;
-    box-sizing: border-box;
-    background: var(--custom-surface);
-    color: var(--custom-text);
-    border: 1px solid var(--custom-border);
+    box-sizing:    border-box;
+    background:    var(--custom-surface);
+    color:         var(--custom-text);
+    border:        1px solid var(--custom-border);
     border-radius: 22px;
-    box-shadow: var(--custom-shadow);
-    transition: all 0.2s ease;
+    box-shadow:    var(--custom-shadow);
+    transition:    all 0.2s ease;
 }
 
 .drawer-avatar {
-    flex-shrink: 0;
+    flex-shrink:                0;
     --vaadin-avatar-text-color: #000000;
-    background-color: #71bc68;
+    background-color:           #71bc68;
 }
 
 .drawer-header-name {
-    font-size: 18px;
+    font-size:   18px;
     font-weight: 700;
-    color: var(--custom-text);
+    color:       var(--custom-text);
     white-space: nowrap;
 }
 
-/* ---------- Drawer box ---------- */
+/* ==========================================================
+   DRAWER CONTAINER & BOX
+   ========================================================== */
 
 .drawer-container {
-    position: relative;
-    display: flex;
+    position:    relative;
+    display:     flex;
     align-items: center;
+    min-width:   0;
 }
 
 .drawer-box {
-    width: var(--drawer-width-expanded);
-    overflow: hidden;
-    box-sizing: border-box;
-    background: var(--custom-surface);
-    border: 1px solid var(--custom-border);
+    width:         var(--drawer-width-expanded);
+    min-width:     0;
+    overflow-x:    hidden;
+    overflow-y:    hidden;
+    box-sizing:    border-box;
+    background:    var(--custom-surface);
+    border:        1px solid var(--custom-border);
     border-radius: 18px;
-    box-shadow: var(--custom-shadow);
-    transition: all 0.2s ease;
+    box-shadow:    var(--custom-shadow);
+    transition:    all 0.2s ease;
 }
 
-/* ---------- Collapse button ---------- */
+.drawer-box vaadin-scroller {
+    width:      100%;
+    max-width:  100%;
+    min-width:  0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* ==========================================================
+   COLLAPSE BUTTON
+   ========================================================== */
 
 .drawer-collapse-button {
-    position: absolute;
-    top: 50%;
-    right: -18px;
-    transform: translateY(-50%);
-    z-index: 20;
-    min-width: 36px;
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--custom-border);
+    position:      absolute;
+    top:           50%;
+    right:         -18px;
+    transform:     translateY(-50%);
+    z-index:       20;
+    min-width:     36px;
+    width:         36px;
+    height:        36px;
+    border:        1px solid var(--custom-border);
     border-radius: 999px;
-    background: var(--custom-surface);
-    color: var(--custom-text-soft);
-    box-shadow: var(--custom-shadow);
-    cursor: pointer;
+    background:    var(--custom-surface);
+    color:         var(--custom-text-soft);
+    box-shadow:    var(--custom-shadow);
+    cursor:        pointer;
 }
 
 .drawer-collapse-button:hover {
-    background: var(--app-accent);
-    color: #ffffff;
+    background:   var(--app-accent);
+    color:        #ffffff;
     border-color: var(--app-accent);
 }
 
-/* ---------- SideNav ---------- */
+/* ==========================================================
+   SIDE NAV
+   ========================================================== */
 
 .app-side-nav {
-    padding: 10px 8px 0;
+    padding:    10px 8px 0;
     box-sizing: border-box;
 }
 
 vaadin-side-nav-item::part(link) {
-    min-height: 48px;
-    padding: 12px 12px;
+    min-height:    48px;
+    padding:       12px;
     border-radius: 14px;
-    color: var(--custom-text);
-    font-weight: 600;
-    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    color:         var(--custom-text);
+    font-weight:   600;
+    transition:    background 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
 vaadin-side-nav-item::part(link):hover {
     background: var(--lumo-contrast-10pct);
-    color: var(--lumo-body-text-color);
+    color:      var(--lumo-body-text-color);
 }
 
 vaadin-side-nav-item[current]::part(link) {
     background: color-mix(in srgb, var(--lumo-primary-color) 16%, transparent);
-    color: var(--lumo-primary-text-color);
+    color:      var(--lumo-primary-text-color);
 }
 
 .nav-label {
     white-space: nowrap;
-    color: inherit;
+    color:       inherit;
 }
 
-/* ---------- Footer ---------- */
+/* ==========================================================
+   DRAWER FOOTER
+   ========================================================== */
 
 .drawer-footer {
-    width: var(--drawer-width-expanded);
-    padding: 10px 10px 12px;
+    width:      var(--drawer-width-expanded);
+    padding:    10px 10px 12px;
     box-sizing: border-box;
     background: var(--custom-surface);
     transition: all 0.2s ease;
 }
 
 .drawer-footer-brand-row {
-    gap: 8px;
+    gap:        8px;
     min-height: 58px;
 }
 
@@ -219,36 +277,38 @@ vaadin-side-nav-item[current]::part(link) {
 }
 
 .drawer-footer-text {
-    font-size: 28px;
+    font-size:   28px;
     font-weight: 700;
     line-height: 1;
-    color: var(--custom-text);
+    color:       var(--custom-text);
     white-space: nowrap;
 }
 
-/* ---------- Theme toggle ---------- */
+/* ==========================================================
+   THEME TOGGLE
+   ========================================================== */
 
 .theme-toggle {
-    display: flex;
-    align-items: center;
+    display:         flex;
+    align-items:     center;
     justify-content: center;
-    gap: 4px;
-    margin: 4px 0 12px;
-    padding: 4px;
-    border: 1px solid var(--custom-border);
-    border-radius: 999px;
-    background: var(--custom-surface-2);
+    gap:             4px;
+    margin:          4px 0 12px;
+    padding:         4px;
+    border:          1px solid var(--custom-border);
+    border-radius:   999px;
+    background:      var(--custom-surface-2);
 }
 
 .theme-option {
-    width: 38px;
-    height: 38px;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
+    width:           38px;
+    height:          38px;
+    border-radius:   999px;
+    display:         flex;
+    align-items:     center;
     justify-content: center;
-    cursor: pointer;
-    transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    cursor:          pointer;
+    transition:      background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .theme-option:hover {
@@ -261,23 +321,25 @@ vaadin-side-nav-item[current]::part(link) {
 }
 
 .theme-icon {
-    width: 18px;
-    height: 18px;
+    width:   18px;
+    height:  18px;
     display: block;
 }
 
-/* ---------- CRUD wrappers ---------- */
+/* ==========================================================
+   CRUD WRAPPERS
+   ========================================================== */
 
 .outer-wrapper-shadow {
     border-radius: 28px;
-    background: var(--custom-surface);
-    border: 1px solid var(--custom-border);
-    box-shadow: var(--custom-shadow);
+    background:    var(--custom-surface);
+    border:        1px solid var(--custom-border);
+    box-shadow:    var(--custom-shadow);
 }
 
 .form-standard-style {
     padding-left: 14px;
-    color: var(--custom-text);
+    color:        var(--custom-text);
 }
 
 .padding-left-form {
@@ -285,30 +347,32 @@ vaadin-side-nav-item[current]::part(link) {
 }
 
 .form-btn {
-    border-end-end-radius: 28px;
-    border-start-end-radius: 28px;
+    border-end-end-radius:     28px;
+    border-start-end-radius:   28px;
     border-start-start-radius: 0;
-    border-end-start-radius: 0;
-    background: var(--app-accent);
-    color: #ffffff;
-    font-weight: 800;
-    font-size: 2rem;
-    padding-left: 10px;
-    padding-bottom: 5px;
+    border-end-start-radius:   0;
+    background:                var(--app-accent);
+    color:                     #ffffff;
+    font-weight:               800;
+    font-size:                 2rem;
+    padding-left:              10px;
+    padding-bottom:            5px;
 }
 
 .form-btn:hover {
     background: var(--app-accent-hover);
 }
 
-/* ---------- Grid ---------- */
+/* ==========================================================
+   GRID
+   ========================================================== */
 
 .grid-style {
     border-radius: 24px;
-    overflow: hidden;
-    background: var(--custom-surface);
-    border: 1px solid var(--custom-border);
-    box-shadow: var(--custom-shadow);
+    overflow:      hidden;
+    background:    var(--custom-surface);
+    border:        1px solid var(--custom-border);
+    box-shadow:    var(--custom-shadow);
     margin-bottom: 6px;
 }
 
@@ -320,64 +384,184 @@ vaadin-grid::part(cell) {
     padding: 6px;
 }
 
-/* ---------- Status icons ---------- */
+/* ==========================================================
+   STATUS ICONS
+   ========================================================== */
 
 .icon-green {
-    color: var(--lumo-success-color);
+    color:       var(--lumo-success-color);
     margin-left: 20px;
 }
 
 .icon-red {
-    color: var(--lumo-error-color);
+    color:       var(--lumo-error-color);
     margin-left: 20px;
 }
 
-/* ---------- Collapsed ---------- */
+/* ==========================================================
+   COLLAPSED STATE
+   ========================================================== */
 
+/* Header */
 vaadin-app-layout.drawer-collapsed .drawer-header {
-    padding: 8px;
+    padding:       8px;
     border-radius: 999px;
 }
 
+/* Testi nascosti */
 vaadin-app-layout.drawer-collapsed .drawer-header-name,
 vaadin-app-layout.drawer-collapsed .nav-label,
 vaadin-app-layout.drawer-collapsed .drawer-footer-text {
     display: none;
 }
 
+/* Footer brand row */
 vaadin-app-layout.drawer-collapsed .drawer-footer-brand-row {
-    gap: 0;
+    gap:             0;
     justify-content: center;
 }
 
+/* Theme toggle ridotto */
 vaadin-app-layout.drawer-collapsed .theme-option {
-    width: 32px;
+    width:  32px;
     height: 32px;
 }
 
 vaadin-app-layout.drawer-collapsed .theme-icon {
-    width: 16px;
+    width:  16px;
     height: 16px;
 }
 
+/* Drawer box e scroller */
+vaadin-app-layout.drawer-collapsed .drawer-box,
+vaadin-app-layout.drawer-collapsed .drawer-box vaadin-scroller {
+    min-width:  0;
+    max-width:  100%;
+    overflow-x: hidden;
+}
+
+/* SideNav centratura */
+vaadin-app-layout.drawer-collapsed .app-side-nav {
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    padding-left:   0;
+    padding-right:  0;
+}
+
+/* SideNavItem wrapper */
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item {
+    width:           100%;
+    display:         flex;
+    justify-content: center;
+    align-items:     center;
+}
+
+/* Link pill normale */
 vaadin-app-layout.drawer-collapsed vaadin-side-nav-item::part(link) {
+    position:        relative;
+    width:           48px;
+    min-width:       48px;
+    max-width:       48px;
+    min-height:      48px;
+    padding:         0 !important;
+    margin:          0 auto;
+    display:         flex;
     justify-content: center;
-    padding-left: 0;
-    padding-right: 0;
+    align-items:     center;
+    gap:             0 !important;
+    overflow:        visible;
+    box-sizing:      border-box;
+    border-radius:   16px;
 }
 
+/* Content — bypass layout interno Vaadin */
 vaadin-app-layout.drawer-collapsed vaadin-side-nav-item::part(content) {
-    justify-content: center;
+    display: contents;
 }
 
-/* ---------- Bottom note ---------- */
+/* Icona normale — ancorata al centro della pill */
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item > [slot="prefix"] {
+    position:           absolute !important;
+    top:                50% !important;
+    left:               50% !important;
+    transform:          translate(-50%, -50%) !important;
+    width:              22px;
+    height:             22px;
+    margin:             0 !important;
+    padding:            0 !important;
+    display:            flex;
+    justify-content:    center;
+    align-items:        center;
+    flex-shrink:        0;
+    --vaadin-icon-size: 22px;
+}
+
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item > [slot="prefix"] svg {
+    width:   22px;
+    height:  22px;
+    display: block;
+}
+
+/* Pill attiva più grande */
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item[current]::part(link) {
+    position:        relative;
+    width:           56px;
+    min-width:       56px;
+    max-width:       56px;
+    min-height:      56px;
+    padding:         0 !important;
+    margin:          2px auto;
+    display:         flex;
+    justify-content: center;
+    align-items:     center;
+    gap:             0 !important;
+    overflow:        visible;
+    box-sizing:      border-box;
+    border-radius:   18px;
+    background:      color-mix(in srgb, var(--lumo-primary-color) 22%, transparent);
+    color:           var(--lumo-primary-text-color);
+    box-shadow:      0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* Content attivo — bypass layout interno Vaadin */
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item[current]::part(content) {
+    display: contents;
+}
+
+/* Icona attiva — ancorata al centro della pill */
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item[current] > [slot="prefix"] {
+    position:           absolute !important;
+    top:                50% !important;
+    left:               50% !important;
+    transform:          translate(-50%, -50%) !important;
+    width:              26px;
+    height:             26px;
+    margin:             0 !important;
+    padding:            0 !important;
+    display:            flex;
+    justify-content:    center;
+    align-items:        center;
+    flex-shrink:        0;
+    --vaadin-icon-size: 26px;
+}
+
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item[current] > [slot="prefix"] svg {
+    width:   26px;
+    height:  26px;
+    display: block;
+}
+
+/* ==========================================================
+   BOTTOM NOTE
+   ========================================================== */
 
 .bottom-right-note {
-    position: fixed;
-    right: 4px;
-    bottom: 2px;
-    z-index: 1000;
+    position:    fixed;
+    right:       4px;
+    bottom:      2px;
+    z-index:     1000;
     font-weight: 700;
-    color: var(--custom-text-soft);
-    font-size: 12px;
+    color:       var(--custom-text-soft);
+    font-size:   12px;
 }
