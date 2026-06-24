@@ -1,14 +1,14 @@
 package com.example.modelli.ui;
 
-import com.example.alimentazioni.*;
-import com.example.base.ui.ViewTitle;
-import com.example.modelli.ModelloService;
-import com.example.tipologieVeicolo.*;
-import com.example.aggiungiMarca.*;
 import com.example.aggiungiMarca.Marca;
+import com.example.aggiungiMarca.MarcaService;
 import com.example.alimentazioni.Alimentazione;
+import com.example.alimentazioni.AlimentazioneService;
+import com.example.base.ui.ViewTitle;
 import com.example.modelli.Modello;
+import com.example.modelli.ModelloService;
 import com.example.tipologieVeicolo.TipologiaVeicolo;
+import com.example.tipologieVeicolo.TipologiaVeicoloService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -34,49 +34,68 @@ import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRe
 @Route(value = "modelli")
 @PageTitle("Modelli")
 @Menu(order = 4, icon = "icons/modelli.svg", title = "Modelli")
-
 public class ModelliListView extends VerticalLayout {
 
     private final ModelloService modelloService;
 
-    final TextField nomeModello;
+    private final TextField nomeModello;
+    private final IntegerField cilindrata;
+    private final IntegerField numeroPasseggeri;
+    private final IntegerField costoGiornaliero;
+    private final IntegerField quantita;
 
-    final IntegerField cilindrata;
-    final IntegerField numeroPasseggeri;
-    final IntegerField costoGiornaliero;
-    final IntegerField quantita;
+    private final Dialog formDialog;
+    private final Button createBtn;
+    private final Grid<Modello> modelloGrid;
 
-    final Dialog formDialog;
-    final Button createBtn;
-    final Grid<Modello> modelloGrid;
+    private final Select<Alimentazione> alimentazioneSelect;
+    private final Select<TipologiaVeicolo> tipologiaVeicoloSelect;
+    private final Select<Marca> marcaSelect;
+    private final Select<Integer> numeroCilindri;
 
-    final Select<Alimentazione> alimentazioneSelect;
-    final Select<TipologiaVeicolo> tipologiaVeicoloSelect;
-    final Select<Marca> marcaSelect;
-    final Select<Integer> numeroCilindri;
-
-    ModelliListView(ModelloService modelloService, AlimentazioneService alimentazioneService, TipologiaVeicoloService tipologiaVeicoloService, MarcaService marcaService){
-
+    ModelliListView(
+            ModelloService modelloService,
+            AlimentazioneService alimentazioneService,
+            TipologiaVeicoloService tipologiaVeicoloService,
+            MarcaService marcaService
+    ) {
         this.modelloService = modelloService;
 
+        addClassName("modelli-view");
+
         marcaSelect = new Select<>();
+        marcaSelect.addClassNames("modelli-field", "modelli-select-full");
+
         nomeModello = new TextField();
+        nomeModello.addClassNames("modelli-field", "modelli-text-full");
+
         tipologiaVeicoloSelect = new Select<>();
+        tipologiaVeicoloSelect.addClassNames("modelli-field", "modelli-select-full");
+
         numeroCilindri = new Select<>();
+        numeroCilindri.addClassNames("modelli-field", "modelli-select-full");
+
         cilindrata = new IntegerField();
+        cilindrata.addClassNames("modelli-field", "modelli-integer-full");
+
         alimentazioneSelect = new Select<>();
+        alimentazioneSelect.addClassNames("modelli-field", "modelli-select-full");
+
         numeroPasseggeri = new IntegerField();
+        numeroPasseggeri.addClassNames("modelli-field", "modelli-integer-full");
+
         costoGiornaliero = new IntegerField();
+        costoGiornaliero.addClassNames("modelli-field", "modelli-integer-full");
+
         quantita = new IntegerField();
+        quantita.addClassNames("modelli-field", "modelli-integer-full");
 
         createBtn = new Button("Aggiungi", event -> createModello());
         createBtn.addThemeVariants(ButtonVariant.PRIMARY);
 
         modelloGrid = new Grid<>();
-
         formDialog = createFormDialog();
 
-        // Marca Select
         marcaSelect.setLabel("Marca");
         marcaSelect.setPlaceholder("Seleziona marca");
         List<Marca> marche = marcaService.list(Pageable.unpaged());
@@ -88,37 +107,30 @@ public class ModelliListView extends VerticalLayout {
             marcaSelect.setItemLabelGenerator(Marca::getMarca);
         }
 
-        // Nome Modello
         nomeModello.setPlaceholder("Serie 3");
         nomeModello.setLabel("Nome modello");
         nomeModello.setAriaLabel("Nome modello");
         nomeModello.setMaxLength(Modello.NOME_MODELLO_MAX_LENGTH);
-        nomeModello.setMinWidth("10em");
 
-        // Tipologia Veicolo Select
         tipologiaVeicoloSelect.setLabel("Tipologia veicolo");
         tipologiaVeicoloSelect.setPlaceholder("Seleziona tipologia");
-        List<TipologiaVeicolo> tipologia = tipologiaVeicoloService.list(Pageable.unpaged());
-        if (tipologia.isEmpty()) {
+        List<TipologiaVeicolo> tipologie = tipologiaVeicoloService.list(Pageable.unpaged());
+        if (tipologie.isEmpty()) {
             tipologiaVeicoloSelect.setEnabled(false);
-            tipologiaVeicoloSelect.setPlaceholder("Nessuna alimentazione disponibile");
+            tipologiaVeicoloSelect.setPlaceholder("Nessuna tipologia disponibile");
         } else {
-            tipologiaVeicoloSelect.setItems(tipologia);
+            tipologiaVeicoloSelect.setItems(tipologie);
             tipologiaVeicoloSelect.setItemLabelGenerator(TipologiaVeicolo::getTipologia);
         }
 
-        // Numero Cilindri
         numeroCilindri.setLabel("Numero cilindri");
         numeroCilindri.setItems(0, 1, 2, 3, 4, 5, 6, 8, 10, 12);
 
-        // Cilindrata
         cilindrata.setPlaceholder("Es. 1998");
         cilindrata.setLabel("Cilindrata");
         cilindrata.setAriaLabel("Cilindrata");
         cilindrata.setMin(0);
-        cilindrata.setMinWidth("10em");
 
-        // Alimentazione Select
         alimentazioneSelect.setLabel("Alimentazione");
         alimentazioneSelect.setPlaceholder("Seleziona alimentazione");
         List<Alimentazione> alimentazioni = alimentazioneService.list(Pageable.unpaged());
@@ -130,39 +142,31 @@ public class ModelliListView extends VerticalLayout {
             alimentazioneSelect.setItemLabelGenerator(Alimentazione::getAlimentazione);
         }
 
-        // Numero Passeggeri
         numeroPasseggeri.setPlaceholder("Es. 5");
         numeroPasseggeri.setLabel("Numero passeggeri");
         numeroPasseggeri.setAriaLabel("Numero passeggeri");
         numeroPasseggeri.setMin(1);
         numeroPasseggeri.setMax(9);
-        numeroPasseggeri.setMinWidth("10em");
 
-        // Costo Giornaliero
         costoGiornaliero.setPlaceholder("Es. 80");
         costoGiornaliero.setLabel("Costo noleggio giornaliero");
         costoGiornaliero.setAriaLabel("Costo noleggio giornaliero");
         costoGiornaliero.setMin(0);
-        costoGiornaliero.setMinWidth("10em");
 
-        // Quantita
         quantita.setPlaceholder("Es. 3");
         quantita.setLabel("Quantità");
         quantita.setAriaLabel("Quantità");
         quantita.setMin(0);
-        quantita.setMinWidth("10em");
-
 
         var openDialogBtn = new Button("+", e -> formDialog.open());
-        openDialogBtn.setClassName("form-btn");
-        openDialogBtn.setHeightFull();
+        openDialogBtn.addClassNames("form-btn", "modelli-open-dialog-btn");
 
         var toolbar = new HorizontalLayout();
         toolbar.setWrap(true);
         toolbar.setHeightFull();
         toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         toolbar.setAlignItems(Alignment.CENTER);
-        toolbar.setClassName("form-standard-style");
+        toolbar.addClassName("modelli-toolbar");
         toolbar.add(new ViewTitle("Lista modelli"));
 
         var outerWrapper = new HorizontalLayout();
@@ -170,11 +174,9 @@ public class ModelliListView extends VerticalLayout {
         outerWrapper.setSpacing(false);
         outerWrapper.setAlignItems(Alignment.CENTER);
         outerWrapper.setFlexGrow(1, toolbar);
-        outerWrapper.setClassName("outer-wrapper-shadow");
+        outerWrapper.addClassNames("outer-wrapper-shadow", "modelli-outer-wrapper");
         outerWrapper.add(toolbar, openDialogBtn);
 
-
-        // Visualizzazione record
         modelloGrid.setItems(query -> modelloService.list(toSpringPageRequest(query)).stream());
         modelloGrid.addColumn(modello -> modello.getMarca().getMarca()).setHeader("Marca");
         modelloGrid.addColumn(Modello::getNomeModello).setHeader("Modello");
@@ -187,12 +189,12 @@ public class ModelliListView extends VerticalLayout {
         modelloGrid.addComponentColumn(modello -> {
             Button elimina = new Button("Elimina", click -> deleteModello(modello.getId()));
             elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            elimina.addClassName("modelli-delete-btn");
             return elimina;
         }).setHeader("Azioni");
 
-        modelloGrid.setEmptyStateText("Non ci sono marchi registrati");
-
-        modelloGrid.setClassName("grid-style");
+        modelloGrid.setEmptyStateText("Non ci sono modelli registrati");
+        modelloGrid.addClassNames("grid-style", "modelli-grid");
         modelloGrid.addThemeVariants(
                 GridVariant.LUMO_NO_BORDER,
                 GridVariant.LUMO_ROW_STRIPES,
@@ -200,14 +202,12 @@ public class ModelliListView extends VerticalLayout {
         );
 
         modelloGrid.setSizeFull();
-
         setSizeFull();
 
         add(outerWrapper, modelloGrid);
     }
 
     private void createModello() {
-
         if (nomeModello.getValue().isBlank()) {
             nomeModello.setInvalid(true);
             nomeModello.setErrorMessage("Nome richiesto");
@@ -279,36 +279,26 @@ public class ModelliListView extends VerticalLayout {
         costoGiornaliero.clear();
         quantita.clear();
         formDialog.close();
-        Notification.show(nome + " aggiunto!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.SUCCESS);
+
+        Notification.show(nome + " aggiunto!", 3000, Notification.Position.BOTTOM_END)
+                .addThemeVariants(NotificationVariant.SUCCESS);
     }
 
     private void deleteModello(Long id) {
         modelloService.deleteModello(id);
         modelloGrid.getDataProvider().refreshAll();
-        Notification.show("Modello eliminato!", 3000, Notification.Position.BOTTOM_END).addThemeVariants(NotificationVariant.WARNING);
+
+        Notification.show("Modello eliminato!", 3000, Notification.Position.BOTTOM_END)
+                .addThemeVariants(NotificationVariant.WARNING);
     }
 
     private Dialog createFormDialog() {
-
         var dialog = new Dialog();
         dialog.setHeaderTitle("Aggiungi modello");
-
-        // Mobile quasi pieno, desktop più compatto
-        dialog.setWidth("95vw");
-        dialog.setMaxWidth("900px");
-
-        marcaSelect.setWidthFull();
-        nomeModello.setWidthFull();
-        tipologiaVeicoloSelect.setWidthFull();
-        numeroCilindri.setWidthFull();
-        alimentazioneSelect.setWidthFull();
-        cilindrata.setWidthFull();
-        numeroPasseggeri.setWidthFull();
-        costoGiornaliero.setWidthFull();
-        quantita.setWidthFull();
+        dialog.addClassName("modelli-form-dialog");
 
         var form = new FormLayout();
-        form.setWidthFull();
+        form.addClassName("modelli-form");
         form.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
                 new FormLayout.ResponsiveStep("700px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP)

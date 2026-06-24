@@ -56,7 +56,7 @@ html[theme~="dark"] {
     --custom-text:               #f3f7ff;
     --custom-text-soft:          #b8c3d6;
 
-    --lumo-primary-color:        #5aa9ff;
+    --lumo-primary-color: #034287;
     --lumo-primary-text-color:   #8fc5ff;
     --lumo-success-color:        #4fc37a;
     --lumo-error-color:          #ff7b7b;
@@ -120,6 +120,319 @@ vaadin-app-layout::part(drawer) {
     background: var(--app-shell-bg);
     border:     none;
     padding:    0;
+}
+
+/* ==========================================================
+   MARCHE VIEW
+   ========================================================== */
+
+.marca-view {
+    gap: 12px;
+}
+
+.marca-form-dialog::part(content) {
+    max-width: 700px;
+}
+
+.marca-nome-field {
+    min-width: 15em;
+    padding-right: 20px;
+}
+
+.marca-open-dialog-btn {
+    height: 100%;
+}
+
+.marca-toolbar {
+    padding-left: 14px;
+    color: var(--custom-text);
+}
+
+.marca-outer-wrapper {
+    border-radius: 28px;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+}
+
+.marca-grid {
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+    margin-bottom: 6px;
+}
+
+.marca-delete-btn {
+    min-width: 96px;
+}
+
+/* ==========================================================
+   ALIMENTAZIONI VIEW
+   ========================================================== */
+
+.alimentazioni-view {
+    gap: 12px;
+}
+
+.alimentazioni-form-dialog::part(content) {
+    max-width: 700px;
+}
+
+.alimentazioni-nome-field {
+    min-width: 15em;
+    padding-right: 20px;
+}
+
+.alimentazioni-open-dialog-btn {
+    height: 100%;
+}
+
+.alimentazioni-toolbar {
+    padding-left: 14px;
+    color: var(--custom-text);
+}
+
+.alimentazioni-outer-wrapper {
+    border-radius: 28px;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+}
+
+.alimentazioni-grid {
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+    margin-bottom: 6px;
+}
+
+.alimentazioni-delete-btn {
+    min-width: 96px;
+}
+
+/* ==========================================================
+   MAIN LAYOUT
+   ========================================================== */
+
+.app-shell {
+    height: 100%;
+}
+
+.drawer-root-full {
+    width: 100%;
+    height: 100%;
+}
+
+.drawer-header-layout {
+    width: var(--drawer-width-expanded);
+}
+
+.drawer-box-layout {
+    width: var(--drawer-width-expanded);
+    height: 100%;
+}
+
+.drawer-container-full {
+    height: 100%;
+}
+
+.drawer-footer-layout {
+    width: var(--drawer-width-expanded);
+}
+
+.drawer-brand-row {
+    width: 100%;
+}
+
+.drawer-logo {
+    width: 56px;
+}
+
+.app-side-nav-layout {
+    min-width: 80px;
+}
+
+/* ==========================================================
+   MODELLI VIEW
+   ========================================================== */
+
+.modelli-view {
+    gap: 12px;
+}
+
+.modelli-toolbar {
+    padding-left: 14px;
+    color: var(--custom-text);
+}
+
+.modelli-open-dialog-btn {
+    height: 100%;
+}
+
+.modelli-outer-wrapper {
+    border-radius: 28px;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+}
+
+.modelli-grid {
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+    margin-bottom: 6px;
+}
+
+.modelli-delete-btn {
+    min-width: 96px;
+}
+
+.modelli-form-dialog::part(content) {
+    width: 95vw;
+    max-width: 900px;
+}
+
+.modelli-form {
+    width: 100%;
+}
+
+.modelli-field {
+    min-width: 10em;
+    width: 100%;
+}
+
+.modelli-select-full,
+.modelli-integer-full,
+.modelli-text-full {
+    width: 100%;
+}
+
+/* ==========================================================
+   TIPOLOGIE VEICOLO VIEW
+   ========================================================== */
+
+.tipologie-view {
+    gap: 12px;
+}
+
+.tipologie-form-dialog::part(content) {
+    max-width: 700px;
+}
+
+.tipologie-nome-field {
+    min-width: 15em;
+    padding-right: 20px;
+}
+
+.tipologie-open-dialog-btn {
+    height: 100%;
+}
+
+.tipologie-toolbar {
+    padding-left: 14px;
+    color: var(--custom-text);
+}
+
+.tipologie-outer-wrapper {
+    border-radius: 28px;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+}
+
+.tipologie-grid {
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+    margin-bottom: 6px;
+}
+
+.tipologie-delete-btn {
+    min-width: 96px;
+}
+
+/* ==========================================================
+   VEICOLI VIEW
+   ========================================================== */
+
+.veicoli-view {
+    gap: 12px;
+}
+
+.veicoli-toolbar {
+    padding-left: 14px;
+    color: var(--custom-text);
+}
+
+.veicoli-open-dialog-btn {
+    height: 100%;
+}
+
+.veicoli-outer-wrapper {
+    border-radius: 28px;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+}
+
+.grid-style::part(selected-row-cell) {
+    background-image: linear-gradient(#1f6feb, #1f6feb);
+    color: white;
+}
+
+.veicoli-grid {
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--custom-surface);
+    border: 1px solid var(--custom-border);
+    box-shadow: var(--custom-shadow);
+    margin-bottom: 6px;
+}
+
+.veicoli-form-dialog::part(content) {
+    width: 95vw;
+    max-width: 820px;
+}
+
+.veicoli-form {
+    width: 100%;
+}
+
+.veicoli-select-full,
+.veicoli-date-full,
+.veicoli-integer-full,
+.veicoli-text-full {
+    width: 100%;
+}
+
+.veicoli-targa-field {
+    min-width: 12ch;
+}
+
+.veicoli-prenotazione-field {
+    min-width: 10ch;
+}
+
+.veicoli-actions-layout {
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+
+.veicoli-action-btn {
+    min-width: 42px;
+    width: 42px;
+    height: 42px;
+    padding: 0;
 }
 
 /* ==========================================================
@@ -200,20 +513,26 @@ vaadin-app-layout::part(drawer) {
    ========================================================== */
 
 .drawer-collapse-button {
-    position:      absolute;
-    top:           50%;
-    right:         -18px;
-    transform:     translateY(-50%);
-    z-index:       20;
-    min-width:     36px;
-    width:         36px;
-    height:        36px;
-    border:        1px solid var(--custom-border);
+    position: absolute;
+    top: 50%;
+    right: -16px;
+    transform: translateY(-50%);
+    z-index: 300;
+
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--custom-border);
     border-radius: 999px;
-    background:    var(--custom-surface);
-    color:         var(--custom-text-soft);
-    box-shadow:    var(--custom-shadow);
-    cursor:        pointer;
+    background: var(--custom-surface);
+    color: var(--custom-text);
+    box-shadow: var(--custom-shadow);
 }
 
 .drawer-collapse-button:hover {
@@ -231,12 +550,18 @@ vaadin-app-layout::part(drawer) {
     box-sizing: border-box;
 }
 
+
+
 vaadin-side-nav-item::part(link) {
+    height:        48px;
     min-height:    48px;
-    padding:       12px;
+    padding:       0 12px;
     border-radius: 14px;
     color:         var(--custom-text);
     font-weight:   600;
+    display:       flex;
+    align-items:   center;
+    box-sizing:    border-box;
     transition:    background 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
@@ -246,8 +571,8 @@ vaadin-side-nav-item::part(link):hover {
 }
 
 vaadin-side-nav-item[current]::part(link) {
-    background: color-mix(in srgb, var(--lumo-primary-color) 16%, transparent);
-    color:      var(--lumo-primary-text-color);
+    background: #1f6feb;
+    color: white;
 }
 
 .nav-label {
@@ -527,6 +852,12 @@ vaadin-app-layout.drawer-collapsed vaadin-side-nav-item[current]::part(link) {
 /* Content attivo — bypass layout interno Vaadin */
 vaadin-app-layout.drawer-collapsed vaadin-side-nav-item[current]::part(content) {
     display: contents;
+}
+
+
+vaadin-app-layout.drawer-collapsed vaadin-side-nav-item[current]::part(link) {
+    background: #1f6feb;
+    color: white;
 }
 
 /* Icona attiva — ancorata al centro della pill */
