@@ -7,7 +7,6 @@ import com.example.modelli.Modello;
 import com.example.modelli.ModelloService;
 import com.example.veicolo.Veicolo;
 import com.example.veicolo.VeicoloService;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -15,6 +14,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -42,36 +42,50 @@ public class VeicoliListView extends VerticalLayout {
     private final VeicoloService veicoloService;
     private Veicolo veicoloInModifica;
 
-    final Select<Marca> marcaSelect;
-    final Select<Modello> modelliSelect;
-    final TextField targa;
-    final DatePicker dataUltimaPrenotazione;
-    final IntegerField prenotataPerGiorni;
-    final DatePicker dataScadenzaAssicurazione;
+    private final Select<Marca> marcaSelect;
+    private final Select<Modello> modelliSelect;
+    private final TextField targa;
+    private final DatePicker dataUltimaPrenotazione;
+    private final IntegerField prenotataPerGiorni;
+    private final DatePicker dataScadenzaAssicurazione;
 
-    final Dialog formDialog;
-    final Button createBtn;
-    Button updateBtn;
-    final Grid<Veicolo> veicoloGrid;
+    private final Dialog formDialog;
+    private final Button createBtn;
+    private Button updateBtn;
+    private final Grid<Veicolo> veicoloGrid;
 
     VeicoliListView(ModelloService modelloService, VeicoloService veicoloService, MarcaService marcaService) {
         this.veicoloService = veicoloService;
 
+        addClassName("veicoli-view");
+
         marcaSelect = new Select<>();
+        marcaSelect.addClassName("veicoli-select-full");
+
         modelliSelect = new Select<>();
+        modelliSelect.addClassName("veicoli-select-full");
+
         targa = new TextField();
+        targa.addClassNames("veicoli-text-full", "veicoli-targa-field");
+
         dataUltimaPrenotazione = new DatePicker();
+        dataUltimaPrenotazione.addClassName("veicoli-date-full");
+
         prenotataPerGiorni = new IntegerField();
+        prenotataPerGiorni.addClassNames("veicoli-integer-full", "veicoli-prenotazione-field");
+
         dataScadenzaAssicurazione = new DatePicker();
+        dataScadenzaAssicurazione.addClassName("veicoli-date-full");
 
         createBtn = new Button("Aggiungi", event -> createVeicolo());
-        veicoloGrid = new Grid<>();
+        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
 
+        veicoloGrid = new Grid<>();
+        veicoloGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         formDialog = createFormDialog();
 
         modelliSelect.setEnabled(false);
 
-        // Marca Select
         marcaSelect.setLabel("Marca");
         marcaSelect.setPlaceholder("Seleziona marca");
         List<Marca> marche = marcaService.list(Pageable.unpaged());
@@ -97,53 +111,41 @@ public class VeicoliListView extends VerticalLayout {
             modelliSelect.setEnabled(!modelli.isEmpty());
         });
 
-        // Modello Select
         modelliSelect.setLabel("Modelli");
         modelliSelect.setPlaceholder("Seleziona modello");
-        List<Modello> modello = modelloService.list(Pageable.unpaged());
-        if (modello.isEmpty()) {
+        List<Modello> modelli = modelloService.list(Pageable.unpaged());
+        if (modelli.isEmpty()) {
             modelliSelect.setEnabled(false);
             modelliSelect.setPlaceholder("Nessun modello disponibile");
         } else {
-            modelliSelect.setItems(modello);
+            modelliSelect.setItems(modelli);
             modelliSelect.setItemLabelGenerator(Modello::getNomeModello);
         }
 
-        // Targa
         targa.setPlaceholder("AA000AA");
         targa.setLabel("Targa veicolo");
         targa.setAriaLabel("Targa veicolo");
         targa.setMaxLength(Veicolo.TARGA_VEICOLO_MAX_LENGTH);
         targa.setMinLength(7);
-        targa.setWidth("12ch");
 
-        // Data ultima prenotazione
         dataUltimaPrenotazione.setLabel("Data inizio ultima prenotazione");
         dataUltimaPrenotazione.setAriaLabel("Data inizio ultima prenotazione");
 
-        // Giorni di prenotazione
         prenotataPerGiorni.setLabel("Durata prenotazione");
         prenotataPerGiorni.setAriaLabel("Durata prenotazione");
-        prenotataPerGiorni.setWidth("10ch");
 
-        // Scadenza assicurazione
         dataScadenzaAssicurazione.setLabel("Data scadenza assicurazione");
         dataScadenzaAssicurazione.setAriaLabel("Data scadenza assicurazione");
 
-        // Button
-        createBtn.setText("Aggiungi");
-        createBtn.addThemeVariants(ButtonVariant.PRIMARY);
-
         var openDialogBtn = new Button("+", event -> openCreateDialog());
-        openDialogBtn.setClassName("form-btn");
-        openDialogBtn.setHeightFull();
+        openDialogBtn.addClassNames("form-btn", "veicoli-open-dialog-btn");
 
         var toolbar = new HorizontalLayout();
         toolbar.setWrap(true);
         toolbar.setHeightFull();
         toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         toolbar.setAlignItems(Alignment.CENTER);
-        toolbar.setClassName("form-standard-style");
+        toolbar.addClassName("veicoli-toolbar");
         toolbar.add(new ViewTitle("Lista veicoli"));
 
         var outerWrapper = new HorizontalLayout();
@@ -151,10 +153,9 @@ public class VeicoliListView extends VerticalLayout {
         outerWrapper.setSpacing(false);
         outerWrapper.setAlignItems(Alignment.CENTER);
         outerWrapper.setFlexGrow(1, toolbar);
-        outerWrapper.setClassName("outer-wrapper-shadow");
+        outerWrapper.addClassNames("outer-wrapper-shadow", "veicoli-outer-wrapper");
         outerWrapper.add(toolbar, openDialogBtn);
 
-        // Visualizzazione record
         veicoloGrid.setItems(query -> veicoloService.list(toSpringPageRequest(query)).stream());
 
         veicoloGrid.addColumn(veicolo -> veicolo.getMarca().getMarca())
@@ -170,7 +171,8 @@ public class VeicoliListView extends VerticalLayout {
                 .setSortProperty("targa");
 
         veicoloGrid.addColumn(new LocalDateRenderer<>(
-                Veicolo::getDataUltimaPrenotazione, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                Veicolo::getDataUltimaPrenotazione,
+                () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
         )).setHeader("Noleggiata dal").setSortProperty("dataUltimaPrenotazione");
 
         veicoloGrid.addColumn(Veicolo::getPrenotataPerGiorni)
@@ -182,37 +184,37 @@ public class VeicoliListView extends VerticalLayout {
                 .setSortProperty("fatturatoDaPrenotazione");
 
         veicoloGrid.addColumn(new LocalDateRenderer<>(
-                Veicolo::getDataPrimaDisponibilita, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                Veicolo::getDataPrimaDisponibilita,
+                () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
         )).setHeader("Prima disponibilita").setSortProperty("dataPrimaDisponibilita");
 
         veicoloGrid.addColumn(new LocalDateRenderer<>(
-                Veicolo::getDataScadenzaAssicurazione, () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                Veicolo::getDataScadenzaAssicurazione,
+                () -> DateTimeFormatter.ofPattern("dd-MM-yyyy")
         )).setHeader("Scadenza polizza").setSortProperty("dataScadenzaAssicurazione");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             boolean assicurato = veicolo.isAssicurato();
-            Icon icon = VaadinIcon.CHECK.create();
-
-            if (assicurato) {
-                icon.setClassName("icon-green");
-            } else {
-                icon = VaadinIcon.CLOSE.create();
-                icon.setClassName("icon-red");
-            }
-
+            Icon icon = assicurato ? VaadinIcon.CHECK.create() : VaadinIcon.CLOSE.create();
+            icon.setClassName(assicurato ? "icon-green" : "icon-red");
             return icon;
         }).setHeader("Polizza valida?");
 
         veicoloGrid.addComponentColumn(veicolo -> {
             Button modifica = new Button(new Icon(VaadinIcon.PENCIL), click -> openEditDialog(veicolo));
             Button elimina = new Button(new Icon(VaadinIcon.TRASH), click -> deleteVeicolo(veicolo.getId()));
+
+            modifica.addClassName("veicoli-action-btn");
+            elimina.addClassNames("veicoli-action-btn");
             elimina.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            return new HorizontalLayout(modifica, elimina);
+
+            HorizontalLayout actions = new HorizontalLayout(modifica, elimina);
+            actions.addClassName("veicoli-actions-layout");
+            return actions;
         }).setHeader("Azioni");
 
         veicoloGrid.setEmptyStateText("Non ci sono veicoli registrati");
-
-        veicoloGrid.setClassName("grid-style");
+        veicoloGrid.addClassNames("grid-style", "veicoli-grid");
         veicoloGrid.addThemeVariants(
                 GridVariant.LUMO_NO_BORDER,
                 GridVariant.LUMO_ROW_STRIPES,
@@ -220,13 +222,12 @@ public class VeicoliListView extends VerticalLayout {
         );
 
         veicoloGrid.setSizeFull();
-
         setSizeFull();
 
         add(outerWrapper, veicoloGrid);
     }
 
-    private Boolean isFormValid() {
+    private boolean isFormValid() {
         if (marcaSelect.getValue() == null) {
             marcaSelect.setInvalid(true);
             marcaSelect.setErrorMessage("Marca richiesta");
@@ -262,7 +263,9 @@ public class VeicoliListView extends VerticalLayout {
     }
 
     private void createVeicolo() {
-        if (!isFormValid()) return;
+        if (!isFormValid()) {
+            return;
+        }
 
         String targaValore = targa.getValue();
 
@@ -284,7 +287,9 @@ public class VeicoliListView extends VerticalLayout {
     }
 
     private void updateVeicolo(Long id) {
-        if (!isFormValid()) return;
+        if (!isFormValid()) {
+            return;
+        }
 
         String targaValore = targa.getValue();
 
@@ -351,21 +356,10 @@ public class VeicoliListView extends VerticalLayout {
 
     private Dialog createFormDialog() {
         var dialog = new Dialog();
-
-        // Più compatto su desktop, quasi pieno su mobile
-        dialog.setWidth("95vw");
-        dialog.setMaxWidth("820px");
-
-        marcaSelect.setWidthFull();
-        modelliSelect.setWidthFull();
-        targa.setWidthFull();
-        dataUltimaPrenotazione.setWidthFull();
-        prenotataPerGiorni.setWidthFull();
-        dataScadenzaAssicurazione.setWidthFull();
+        dialog.addClassName("veicoli-form-dialog");
 
         var form = new FormLayout();
-        form.setWidthFull();
-
+        form.addClassName("veicoli-form");
         form.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP),
                 new FormLayout.ResponsiveStep("700px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP)
@@ -387,7 +381,6 @@ public class VeicoliListView extends VerticalLayout {
         updateBtn.setVisible(false);
 
         var annullaBtn = new Button("Annulla", e -> dialog.close());
-
         dialog.getFooter().add(annullaBtn, createBtn, updateBtn);
 
         return dialog;

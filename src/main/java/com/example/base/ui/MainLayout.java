@@ -1,7 +1,8 @@
 package com.example.base.ui;
 
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -10,7 +11,6 @@ import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -39,10 +39,12 @@ public final class MainLayout extends AppLayout {
     private Div lightOption;
     private Div darkOption;
 
+    private boolean isDarkMode = false;
+
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
         addClassName("app-shell");
-        getElement().getStyle().set("height", "100%");
+
         addToDrawer(createDrawerContent());
         syncThemeToggle();
     }
@@ -52,6 +54,7 @@ public final class MainLayout extends AppLayout {
         Div note = new Div("©J-Software");
         note.addClassName("bottom-right-note");
         content.getElement().appendChild(note.getElement());
+
         super.setContent(content);
     }
 
@@ -60,14 +63,11 @@ public final class MainLayout extends AppLayout {
         Component drawerContainer = createApplicationDrawerContainer();
 
         VerticalLayout root = new VerticalLayout(headerBox, drawerContainer);
-        root.addClassName("drawer-root");
+        root.addClassNames("drawer-root", "drawer-root-full");
         root.setPadding(false);
         root.setSpacing(false);
         root.setMargin(false);
         root.setAlignItems(FlexComponent.Alignment.CENTER);
-        root.setWidthFull();
-        root.setHeightFull();
-
         root.setFlexGrow(0, headerBox);
         root.setFlexGrow(1, drawerContainer);
 
@@ -86,13 +86,12 @@ public final class MainLayout extends AppLayout {
         userMenu.setOpenOnClick(true);
 
         HorizontalLayout header = new HorizontalLayout(avatar, nome);
-        header.addClassName("drawer-header");
+        header.addClassNames("drawer-header", "drawer-header-layout");
         header.setPadding(false);
         header.setMargin(false);
         header.setSpacing(true);
         header.setAlignItems(FlexComponent.Alignment.CENTER);
         header.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
-        header.setWidth(EXPANDED_WIDTH);
 
         return header;
     }
@@ -108,25 +107,21 @@ public final class MainLayout extends AppLayout {
         footerBox = createApplicationFooter();
 
         drawerBox = new VerticalLayout();
-        drawerBox.addClassName("drawer-box");
+        drawerBox.addClassNames("drawer-box", "drawer-box-layout");
         drawerBox.setPadding(false);
         drawerBox.setSpacing(false);
         drawerBox.setMargin(false);
         drawerBox.setAlignItems(FlexComponent.Alignment.STRETCH);
-        drawerBox.setWidth(EXPANDED_WIDTH);
-        drawerBox.setHeightFull();
-
         drawerBox.add(scroller, footerBox);
         drawerBox.setFlexGrow(1, scroller);
         drawerBox.setFlexGrow(0, footerBox);
 
-        collapseButton = new Button("❮");
+        collapseButton = new Button(new Icon(VaadinIcon.ANGLE_LEFT));
         collapseButton.addClassName("drawer-collapse-button");
         collapseButton.addClickListener(event -> toggleDrawer());
 
         Div container = new Div(drawerBox, collapseButton);
-        container.addClassName("drawer-container");
-        container.setHeightFull();
+        container.addClassNames("drawer-container", "drawer-container-full");
 
         return container;
     }
@@ -135,27 +130,24 @@ public final class MainLayout extends AppLayout {
         Component themeToggle = createThemeToggle();
 
         Image logo = new Image("icons/jsoft.png", "Logo");
-        logo.addClassName("drawer-footer-logo");
-        logo.setWidth("56px");
+        logo.addClassNames("drawer-footer-logo", "drawer-logo");
 
         Span text = new Span("CARS");
         text.addClassName("drawer-footer-text");
 
         HorizontalLayout brandRow = new HorizontalLayout(logo, text);
-        brandRow.addClassName("drawer-footer-brand-row");
+        brandRow.addClassNames("drawer-footer-brand-row", "drawer-brand-row");
         brandRow.setPadding(false);
         brandRow.setSpacing(false);
         brandRow.setMargin(false);
-        brandRow.setWidthFull();
         brandRow.setAlignItems(FlexComponent.Alignment.CENTER);
         brandRow.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
         VerticalLayout footer = new VerticalLayout(themeToggle, brandRow);
-        footer.addClassName("drawer-footer");
+        footer.addClassNames("drawer-footer", "drawer-footer-layout");
         footer.setPadding(false);
         footer.setSpacing(false);
         footer.setMargin(false);
-        footer.setWidth(EXPANDED_WIDTH);
         footer.setAlignItems(FlexComponent.Alignment.CENTER);
         footer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
@@ -183,10 +175,10 @@ public final class MainLayout extends AppLayout {
         return toggle;
     }
 
-    private boolean isDarkMode = false;  // ← metti come campo della classe in cima, con gli altri campi
-
     private void setDarkMode(boolean dark) {
-        if (UI.getCurrent() == null) return;
+        if (UI.getCurrent() == null) {
+            return;
+        }
 
         isDarkMode = dark;
 
@@ -204,7 +196,9 @@ public final class MainLayout extends AppLayout {
     }
 
     private void syncThemeToggle() {
-        if (lightOption == null || darkOption == null) return;
+        if (lightOption == null || darkOption == null) {
+            return;
+        }
 
         if (isDarkMode) {
             darkOption.addClassName("theme-option-active");
@@ -217,9 +211,8 @@ public final class MainLayout extends AppLayout {
 
     private SideNav createSideNav() {
         SideNav nav = new SideNav();
-        nav.setMinWidth(80, Unit.PIXELS);
-        nav.addClassName("app-side-nav");
-        
+        nav.addClassNames("app-side-nav", "app-side-nav-layout");
+
         MenuConfiguration.getMenuEntries()
                 .forEach(entry -> nav.addItem(createSideNavItem(entry)));
 
@@ -252,14 +245,14 @@ public final class MainLayout extends AppLayout {
 
         if (collapsed) {
             addClassName("drawer-collapsed");
-            collapseButton.setText("❯");
+            collapseButton.setIcon(new Icon(VaadinIcon.ANGLE_RIGHT));
             headerBox.setWidth(COLLAPSED_WIDTH);
             headerBox.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
             drawerBox.setWidth(COLLAPSED_WIDTH);
             footerBox.setWidth(COLLAPSED_WIDTH);
         } else {
             removeClassName("drawer-collapsed");
-            collapseButton.setText("❮");
+            collapseButton.setIcon(new Icon(VaadinIcon.ANGLE_LEFT));
             headerBox.setWidth(EXPANDED_WIDTH);
             headerBox.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
             drawerBox.setWidth(EXPANDED_WIDTH);
