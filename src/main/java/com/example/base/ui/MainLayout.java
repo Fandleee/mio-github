@@ -1,17 +1,17 @@
 package com.example.base.ui;
 
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.icon.Icon;
+import com.example.Calendario.ui.CalendarioListView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -19,22 +19,27 @@ import com.vaadin.flow.component.orderedlayout.ScrollerVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Layout;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 
+@AnonymousAllowed
 @Layout
-public final class MainLayout extends AppLayout {
+public final class MainLayout extends AppLayout implements AfterNavigationObserver {
 
     private static final String EXPANDED_WIDTH = "240px";
     private static final String COLLAPSED_WIDTH = "88px";
 
     private boolean collapsed = false;
 
-    private HorizontalLayout headerBox;
+    private VerticalLayout headerBox;
     private VerticalLayout drawerBox;
     private VerticalLayout footerBox;
     private Button collapseButton;
+    private Button calendarButton;
 
     private Div lightOption;
     private Div darkOption;
@@ -44,18 +49,21 @@ public final class MainLayout extends AppLayout {
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
         addClassName("app-shell");
-
         addToDrawer(createDrawerContent());
         syncThemeToggle();
     }
 
     @Override
-    public void setContent(Component content) {
-        Div note = new Div("©J-Software");
-        note.addClassName("bottom-right-note");
-        content.getElement().appendChild(note.getElement());
+    public void afterNavigation(AfterNavigationEvent event) {
+        String path = event.getLocation().getPath();
 
-        super.setContent(content);
+        if (calendarButton != null) {
+            if ("calendario".equals(path)) {
+                calendarButton.addClassName("calendar-button-active");
+            } else {
+                calendarButton.removeClassName("calendar-button-active");
+            }
+        }
     }
 
     private Component createDrawerContent() {
@@ -74,24 +82,29 @@ public final class MainLayout extends AppLayout {
         return root;
     }
 
-    private HorizontalLayout createApplicationHeader() {
+    private VerticalLayout createApplicationHeader() {
         Avatar avatar = new Avatar("Alessio");
         avatar.addClassName("drawer-avatar");
 
         Span nome = new Span("Alessio");
         nome.addClassName("drawer-header-name");
 
-        ContextMenu userMenu = new ContextMenu();
-        userMenu.setTarget(avatar);
-        userMenu.setOpenOnClick(true);
+        SvgIcon calendarIcon = new SvgIcon("icons/calendar.svg");
+        calendarIcon.addClassName("calendar-icon");
 
-        HorizontalLayout header = new HorizontalLayout(avatar, nome);
+        calendarButton = new Button(calendarIcon);
+        calendarButton.addClassName("calendar-button");
+        calendarButton.getElement().setAttribute("aria-label", "Calendario");
+        calendarButton.addClickListener(e -> UI.getCurrent().navigate(CalendarioListView.class));
+
+        VerticalLayout header = new VerticalLayout(avatar, nome, calendarButton);
         header.addClassNames("drawer-header", "drawer-header-layout");
         header.setPadding(false);
-        header.setMargin(false);
         header.setSpacing(true);
+        header.setMargin(false);
         header.setAlignItems(FlexComponent.Alignment.CENTER);
-        header.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+        header.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        header.setWidthFull();
 
         return header;
     }
@@ -183,13 +196,9 @@ public final class MainLayout extends AppLayout {
         isDarkMode = dark;
 
         if (dark) {
-            UI.getCurrent().getPage().executeJs(
-                    "document.documentElement.setAttribute('theme', 'dark')"
-            );
+            UI.getCurrent().getPage().executeJs("document.documentElement.setAttribute('theme', 'dark')");
         } else {
-            UI.getCurrent().getPage().executeJs(
-                    "document.documentElement.removeAttribute('theme')"
-            );
+            UI.getCurrent().getPage().executeJs("document.documentElement.removeAttribute('theme')");
         }
 
         syncThemeToggle();
@@ -245,6 +254,7 @@ public final class MainLayout extends AppLayout {
 
         if (collapsed) {
             addClassName("drawer-collapsed");
+            headerBox.addClassName("drawer-header-collapsed");
             collapseButton.setIcon(new Icon(VaadinIcon.ANGLE_RIGHT));
             headerBox.setWidth(COLLAPSED_WIDTH);
             headerBox.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
@@ -252,6 +262,7 @@ public final class MainLayout extends AppLayout {
             footerBox.setWidth(COLLAPSED_WIDTH);
         } else {
             removeClassName("drawer-collapsed");
+            headerBox.removeClassName("drawer-header-collapsed");
             collapseButton.setIcon(new Icon(VaadinIcon.ANGLE_LEFT));
             headerBox.setWidth(EXPANDED_WIDTH);
             headerBox.setJustifyContentMode(FlexComponent.JustifyContentMode.START);

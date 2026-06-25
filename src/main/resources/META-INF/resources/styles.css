@@ -228,7 +228,17 @@ vaadin-app-layout::part(drawer) {
 }
 
 .drawer-header-layout {
-    width: var(--drawer-width-expanded);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.drawer-header-collapsed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 .drawer-box-layout {
@@ -360,6 +370,47 @@ vaadin-app-layout::part(drawer) {
 }
 
 /* ==========================================================
+   CALENDARIO VIEW
+   ========================================================== */
+
+.drawer-header-layout {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.calendar-button {
+    color: var(--custom-text-soft);
+    background: transparent;
+    padding: 0;
+    min-width: 40px;
+    min-height: 40px;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.calendar-button:hover {
+    background: var(--lumo-contrast-10pct);
+    color: var(--lumo-body-text-color);
+}
+.calendar-button.calendar-button-active {
+    background: #1f6feb;
+    color: white;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.calendar-icon {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* ==========================================================
    VEICOLI VIEW
    ========================================================== */
 
@@ -466,6 +517,7 @@ vaadin-app-layout::part(drawer) {
     flex-shrink:                0;
     --vaadin-avatar-text-color: #000000;
     background-color:           #71bc68;
+    margin-top: 5px;
 }
 
 .drawer-header-name {
@@ -536,9 +588,19 @@ vaadin-app-layout::part(drawer) {
 }
 
 .drawer-collapse-button:hover {
-    background:   var(--app-accent);
-    color:        #ffffff;
+    background: var(--app-accent);
+    color: #ffffff;
     border-color: var(--app-accent);
+}
+
+.drawer-collapse-button:focus,
+.drawer-collapse-button:active,
+.drawer-collapse-button:focus-visible {
+    background: var(--custom-surface) !important;
+    color: var(--custom-text) !important;
+    border-color: var(--custom-border) !important;
+    box-shadow: var(--custom-shadow) !important;
+    outline: none !important;
 }
 
 /* ==========================================================
@@ -550,7 +612,9 @@ vaadin-app-layout::part(drawer) {
     box-sizing: border-box;
 }
 
-
+vaadin-side-nav-item:hover > [slot="prefix"] {
+    color: var(--lumo-body-text-color);
+}
 
 vaadin-side-nav-item::part(link) {
     height:        48px;
@@ -571,8 +635,14 @@ vaadin-side-nav-item::part(link):hover {
 }
 
 vaadin-side-nav-item[current]::part(link) {
+    position: relative;
+    min-height: 56px;
+    padding: 0 16px;
+    border-radius: 18px;
     background: #1f6feb;
     color: white;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+    transform: scale(1.06);
 }
 
 .nav-label {
@@ -729,11 +799,18 @@ vaadin-grid::part(cell) {
 
 /* Header */
 vaadin-app-layout.drawer-collapsed .drawer-header {
-    padding:       8px;
-    border-radius: 999px;
+    width: var(--drawer-width-collapsed);
+    min-height: 66px;
+    padding: 8px 10px;
+    justify-content: center;
+    border: none;
+    box-shadow: none;
 }
 
-/* Testi nascosti */
+vaadin-app-layout.drawer-collapsed .drawer-header-name {
+    display: none;
+}
+
 vaadin-app-layout.drawer-collapsed .drawer-header-name,
 vaadin-app-layout.drawer-collapsed .nav-label,
 vaadin-app-layout.drawer-collapsed .drawer-footer-text {

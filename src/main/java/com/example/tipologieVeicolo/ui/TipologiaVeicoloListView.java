@@ -22,7 +22,7 @@ import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRe
 
 @Route(value = "tipologie-veicolo")
 @PageTitle("Tipologie Veicolo")
-@Menu(order = 2, icon = "icons/tipologie.svg", title = "Tipologie Veicolo")
+@Menu(order = 2, icon = "icons/vehicletype.svg", title = "Tipologie Veicolo")
 class TipologieVeicoloListView extends VerticalLayout {
 
     private final TipologiaVeicoloService tipologiaVeicoloService;

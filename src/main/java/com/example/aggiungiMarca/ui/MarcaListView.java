@@ -22,7 +22,7 @@ import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRe
 
 @Route(value = "marche")
 @PageTitle("Marche")
-@Menu(order = 1, icon = "icons/marche.svg", title = "Marche")
+@Menu(order = 1, icon = "icons/marca.svg", title = "Marche")
 class MarcaListView extends VerticalLayout {
 
     private final MarcaService marcaService;
