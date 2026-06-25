@@ -33,7 +33,7 @@ import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRe
 
 @Route(value = "modelli")
 @PageTitle("Modelli")
-@Menu(order = 4, icon = "icons/modelli.svg", title = "Modelli")
+@Menu(order = 4, icon = "icons/modello.svg", title = "Modelli")
 public class ModelliListView extends VerticalLayout {
 
     private final ModelloService modelloService;
